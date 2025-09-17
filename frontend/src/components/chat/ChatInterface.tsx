@@ -95,6 +95,7 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
       const response = await aiService.generateResponse(
         input.trim(),
         configuration.level,
+        configuration,
         currentSession.conversationHistory
       )
 

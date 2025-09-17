@@ -1,4 +1,4 @@
-import { TutorLevel, ChatMessage, TutorConfiguration, CodeReference } from '@/types/tutor'
+import { TutorLevel, ChatMessage, TutorConfiguration, CodeReference, ModuleReference } from '@/types/tutor'
 
 interface AIServiceConfig {
   provider: 'openai' | 'anthropic'
@@ -264,8 +264,8 @@ Always tailor your responses to the ${tutorLevel} certification level and avoid 
     return references
   }
 
-  private extractModuleReferences(content: string, tutorLevel: TutorLevel): any[] {
-    const references = []
+  private extractModuleReferences(content: string, tutorLevel: TutorLevel): ModuleReference[] {
+    const references: ModuleReference[] = []
     const moduleMatches = content.match(/Module\s*(\d+)/gi)
 
     if (moduleMatches) {

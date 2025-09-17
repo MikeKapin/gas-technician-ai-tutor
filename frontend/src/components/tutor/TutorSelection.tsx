@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Home, Building2, ArrowRight } from 'lucide-react'
+import { BookOpen, Wrench, CheckCircle, AlertTriangle } from 'lucide-react'
 import { TutorLevel, TutorSelectionProps } from '@/types/tutor'
 
 export default function TutorSelection({ onTutorSelected }: TutorSelectionProps) {
@@ -17,117 +17,134 @@ export default function TutorSelection({ onTutorSelected }: TutorSelectionProps)
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex flex-col font-sans">
+      {/* Header */}
+      <div className="bg-slate-800/50 backdrop-blur-sm border-b border-slate-700 px-4 py-6">
+        <div className="max-w-md mx-auto text-center">
+          <div className="flex items-center justify-center mb-3">
+            <Wrench className="h-8 w-8 text-red-500 mr-3" />
+            <h1 className="text-2xl font-bold text-white tracking-wide">Gas Technician Tutor</h1>
+          </div>
+          <p className="text-slate-300 text-sm font-medium">CSA B149.1-25 & B149.2-25 Certified Training</p>
+          <div className="flex items-center justify-center mt-3">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='16' viewBox='0 0 24 16'%3E%3Crect width='24' height='16' fill='%23FF0000'/%3E%3Cpath d='M12 8L6 4v8l6-4z' fill='%23FFFFFF'/%3E%3C/svg%3E" alt="Canada Flag" className="w-6 h-4 mr-2" />
+            <span className="text-slate-400 text-xs font-medium uppercase tracking-wider">Canadian Standards</span>
+          </div>
+        </div>
+      </div>
 
-        {/* Header */}
-        <div className="text-center mb-12">
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col justify-center px-4 py-8">
+        <div className="max-w-md mx-auto w-full space-y-6">
+          <div className="text-center mb-8">
+            <h2 className="text-xl font-semibold text-white mb-2 tracking-wide">Select Your Certification Level</h2>
+            <p className="text-slate-400 text-sm font-normal">Choose your gas technician certification path</p>
+          </div>
+
+          {/* G3 Button */}
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => handleSelection('G3')}
+            className={`w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-6 px-6 rounded-xl shadow-lg transform transition-all duration-200 hover:shadow-xl border border-blue-500/20 ${
+              selected === 'G3' ? 'ring-4 ring-blue-400/50' : ''
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="bg-blue-500/20 p-3 rounded-lg mr-4">
+                  <BookOpen className="h-6 w-6" />
+                </div>
+                <div className="text-left">
+                  <div className="text-lg font-bold tracking-wide">G3 Technician</div>
+                  <div className="text-blue-200 text-sm font-medium">Basic Gas Installation</div>
+                </div>
+              </div>
+              <div className="text-2xl font-bold text-blue-200 tracking-wider">G3</div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-blue-500/20 text-xs text-blue-200 font-normal">
+              Natural gas appliances up to 400,000 BTU/hr
+            </div>
+            {selected === 'G3' && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="mt-2 text-blue-200 text-sm font-semibold"
+              >
+                Selected ✓
+              </motion.div>
+            )}
+          </motion.button>
+
+          {/* G2 Button */}
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => handleSelection('G2')}
+            className={`w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-6 px-6 rounded-xl shadow-lg transform transition-all duration-200 hover:shadow-xl border border-red-500/20 ${
+              selected === 'G2' ? 'ring-4 ring-red-400/50' : ''
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="bg-red-500/20 p-3 rounded-lg mr-4">
+                  <Wrench className="h-6 w-6" />
+                </div>
+                <div className="text-left">
+                  <div className="text-lg font-bold tracking-wide">G2 Technician</div>
+                  <div className="text-red-200 text-sm font-medium">Advanced Gas Systems</div>
+                </div>
+              </div>
+              <div className="text-2xl font-bold text-red-200 tracking-wider">G2</div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-red-500/20 text-xs text-red-200 font-normal">
+              All gas appliances & complex installations
+            </div>
+            {selected === 'G2' && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="mt-2 text-red-200 text-sm font-semibold"
+              >
+                Selected ✓
+              </motion.div>
+            )}
+          </motion.button>
+
+          {/* LARK Labs Branding */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="text-center mt-8"
           >
-            <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-              Gas Technician AI Tutor
-            </h1>
-            <p className="text-xl text-muted-foreground">
-              Choose your certification level
-            </p>
+            <div className="text-slate-500 text-xs font-medium uppercase tracking-wider mb-2">Powered by</div>
+            <div className="text-slate-300 text-lg font-bold tracking-wide">LARK Labs</div>
+            <div className="text-slate-400 text-xs font-normal">Educational Excellence in HVAC Technology</div>
           </motion.div>
         </div>
+      </div>
 
-        {/* Tutor Options */}
-        <div className="grid sm:grid-cols-2 gap-6 mb-8">
-
-          {/* G3 Option */}
-          <motion.button
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            onClick={() => handleSelection('G3')}
-            className={`p-8 rounded-3xl border-2 transition-all duration-300 shadow-xl hover:shadow-2xl ${
-              selected === 'G3'
-                ? 'border-green-500 bg-green-500/10 scale-105'
-                : 'border-border bg-card hover:border-green-500/50 hover:bg-green-500/5'
-            }`}
-          >
-            <div className="flex flex-col items-center text-center">
-              <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mb-6">
-                <Home className="h-10 w-10 text-white" />
-              </div>
-
-              <h3 className="text-2xl font-bold text-foreground mb-2">G3 Level</h3>
-              <p className="text-muted-foreground mb-4">Residential & Small Commercial</p>
-
-              <div className="text-sm text-muted-foreground space-y-1">
-                <div>• CSA B149.1-25</div>
-                <div>• TSSA Regulations</div>
-                <div>• Modules 1-9</div>
-              </div>
-
-              {selected === 'G3' && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="mt-4 flex items-center text-green-600 font-semibold"
-                >
-                  Selected <ArrowRight className="ml-2 h-4 w-4" />
-                </motion.div>
-              )}
+      {/* Footer Info */}
+      <div className="bg-slate-800/30 px-4 py-4">
+        <div className="max-w-md mx-auto text-center">
+          <div className="flex items-center justify-center space-x-4 text-xs text-slate-400 font-medium">
+            <div className="flex items-center">
+              <CheckCircle className="h-4 w-4 mr-1 text-green-500" />
+              CSA Certified
             </div>
-          </motion.button>
-
-          {/* G2 Option */}
-          <motion.button
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            onClick={() => handleSelection('G2')}
-            className={`p-8 rounded-3xl border-2 transition-all duration-300 shadow-xl hover:shadow-2xl ${
-              selected === 'G2'
-                ? 'border-blue-500 bg-blue-500/10 scale-105'
-                : 'border-border bg-card hover:border-blue-500/50 hover:bg-blue-500/5'
-            }`}
-          >
-            <div className="flex flex-col items-center text-center">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-6">
-                <Building2 className="h-10 w-10 text-white" />
-              </div>
-
-              <h3 className="text-2xl font-bold text-foreground mb-2">G2 Level</h3>
-              <p className="text-muted-foreground mb-4">Commercial & Industrial</p>
-
-              <div className="text-sm text-muted-foreground space-y-1">
-                <div>• CSA B149.1-25 & B149.2-25</div>
-                <div>• Advanced Systems</div>
-                <div>• Modules 10-24</div>
-              </div>
-
-              {selected === 'G2' && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="mt-4 flex items-center text-blue-600 font-semibold"
-                >
-                  Selected <ArrowRight className="ml-2 h-4 w-4" />
-                </motion.div>
-              )}
+            <div className="flex items-center">
+              <AlertTriangle className="h-4 w-4 mr-1 text-yellow-500" />
+              Safety First
             </div>
-          </motion.button>
+          </div>
         </div>
-
-        {/* Help Text */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center text-muted-foreground"
-        >
-          <p className="text-sm">
-            <strong>G3:</strong> Start here for residential systems and CSA B149.1-25 basics<br/>
-            <strong>G2:</strong> Advanced level for commercial systems and propane (B149.2-25)
-          </p>
-        </motion.div>
       </div>
     </div>
   )

@@ -4,33 +4,33 @@
 
 @layer base {
   :root {
-    /* Dark theme as default */
-    --background: 217 19% 9%;
+    /* New slate/blue gradient theme */
+    --background: 220 26% 14%;
     --foreground: 210 40% 98%;
-    --card: 217 19% 12%;
+    --card: 215 28% 17%;
     --card-foreground: 210 40% 98%;
-    --popover: 217 19% 12%;
+    --popover: 215 28% 17%;
     --popover-foreground: 210 40% 98%;
-    --primary: 142 86% 28%;
+    --primary: 217 91% 60%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 217 19% 16%;
+    --secondary: 215 20% 21%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217 19% 16%;
+    --muted: 215 20% 21%;
     --muted-foreground: 215 20% 65%;
-    --accent: 217 19% 16%;
+    --accent: 215 20% 21%;
     --accent-foreground: 210 40% 98%;
-    --destructive: 0 62% 50%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217 19% 20%;
-    --input: 217 19% 16%;
-    --ring: 142 86% 28%;
-    --radius: 1rem;
+    --border: 215 28% 25%;
+    --input: 215 28% 17%;
+    --ring: 217 91% 60%;
+    --radius: 0.75rem;
 
     /* Gas tech brand colors */
     --gas-blue: 217 91% 60%;
-    --gas-orange: 25 95% 53%;
-    --gas-green: 142 86% 28%;
     --gas-red: 0 84% 60%;
+    --gas-green: 142 86% 28%;
+    --gas-orange: 25 95% 53%;
   }
 
   .light {
@@ -323,5 +323,54 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  /* Custom gradients for new design */
+  .bg-slate-gradient {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0f172a 100%);
+  }
+
+  .bg-blue-gradient {
+    background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+  }
+
+  .bg-red-gradient {
+    background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%);
+  }
+
+  /* Enhanced animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  .animate-pulse-scale {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 }

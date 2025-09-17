@@ -1,4 +1,4 @@
-import { TutorLevel, ChatMessage, TutorConfiguration } from '@/types/tutor'
+import { TutorLevel, ChatMessage, TutorConfiguration, CodeReference } from '@/types/tutor'
 
 interface AIServiceConfig {
   provider: 'openai' | 'anthropic'
@@ -224,8 +224,8 @@ Always tailor your responses to the ${tutorLevel} certification level and avoid 
     }
   }
 
-  private extractCodeReferences(content: string, tutorLevel: TutorLevel): any[] {
-    const references = []
+  private extractCodeReferences(content: string, tutorLevel: TutorLevel): CodeReference[] {
+    const references: CodeReference[] = []
 
     // Extract CSA B149.1-25 references
     const b1491Matches = content.match(/CSA B149\.1-25[,\s]*Section\s*([\d.]+)/gi)

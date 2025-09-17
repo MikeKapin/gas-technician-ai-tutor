@@ -231,7 +231,6 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
             <ChatMessageComponent
               key={message.id}
               message={message}
-              tutorLevel={configuration.level}
             />
           ))}
 

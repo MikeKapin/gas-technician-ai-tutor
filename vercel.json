@@ -1,6 +1,14 @@
 {
-  "version": 2,
-  "name": "gas-technician-ai-tutor",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "installCommand": "npm install",
+  "devCommand": "npm run dev",
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "runtime": "nodejs20.x"
+    }
+  },
   "headers": [
     {
       "source": "/(.*)",
@@ -15,9 +23,13 @@
         },
         {
           "key": "Referrer-Policy",
-          "value": "origin-when-cross-origin"
+          "value": "strict-origin-when-cross-origin"
         }
       ]
     }
-  ]
+  ],
+  "env": {
+    "NEXT_PUBLIC_APP_NAME": "Canadian Gas Technician Tutor",
+    "NEXT_PUBLIC_CSA_VERSION": "B149.1-25, B149.2-25"
+  }
 }

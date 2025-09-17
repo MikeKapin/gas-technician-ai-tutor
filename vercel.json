@@ -1,0 +1,49 @@
+{
+  "version": 2,
+  "name": "gas-technician-ai-tutor",
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/next",
+      "config": {
+        "distDir": ".next"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/$1"
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_API_URL": "@api_url",
+    "NEXT_PUBLIC_ANTHROPIC_API_KEY": "@anthropic_api_key",
+    "NEXT_PUBLIC_AI_PROVIDER": "anthropic",
+    "NEXT_PUBLIC_CLAUDE_MODEL": "claude-3-sonnet-20240229"
+  },
+  "functions": {
+    "frontend/pages/api/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "origin-when-cross-origin"
+        }
+      ]
+    }
+  ]
+}

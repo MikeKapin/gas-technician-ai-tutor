@@ -1,0 +1,307 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* Chat Interface Components */
+  .chat-container {
+    @apply flex flex-col h-full bg-gradient-to-br from-slate-50 to-blue-50;
+  }
+
+  .chat-messages {
+    @apply flex-1 overflow-y-auto p-4 space-y-4;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f8fafc;
+  }
+
+  .chat-messages::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .chat-messages::-webkit-scrollbar-track {
+    @apply bg-slate-100 rounded-full;
+  }
+
+  .chat-messages::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 rounded-full hover:bg-slate-400;
+  }
+
+  .message-bubble {
+    @apply max-w-3xl rounded-2xl px-4 py-3 shadow-sm;
+  }
+
+  .message-user {
+    @apply ml-auto bg-primary-500 text-white;
+  }
+
+  .message-ai {
+    @apply mr-auto bg-white border border-slate-200;
+  }
+
+  .message-system {
+    @apply mx-auto bg-accent-100 text-accent-800 text-sm;
+  }
+
+  /* Code Compass Style Components */
+  .code-compass-container {
+    @apply bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden;
+  }
+
+  .code-section-header {
+    @apply bg-gradient-to-r from-gas-blue to-blue-600 text-white p-4;
+  }
+
+  .code-section-content {
+    @apply p-6 space-y-4;
+  }
+
+  .code-reference {
+    @apply inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full;
+  }
+
+  .code-highlight {
+    @apply bg-yellow-100 text-yellow-900 px-1 py-0.5 rounded font-medium;
+  }
+
+  /* Learning Module Components */
+  .module-card {
+    @apply bg-white rounded-lg border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow;
+  }
+
+  .module-progress-bar {
+    @apply w-full bg-slate-200 rounded-full h-2 overflow-hidden;
+  }
+
+  .module-progress-fill {
+    @apply bg-gradient-to-r from-primary-500 to-primary-600 h-full transition-all duration-500 ease-out;
+  }
+
+  /* AI Thinking Animation */
+  .ai-thinking {
+    @apply flex items-center space-x-2 text-slate-500;
+  }
+
+  .ai-thinking-dot {
+    @apply w-2 h-2 bg-current rounded-full animate-pulse;
+    animation-delay: 0ms;
+  }
+
+  .ai-thinking-dot:nth-child(2) {
+    animation-delay: 200ms;
+  }
+
+  .ai-thinking-dot:nth-child(3) {
+    animation-delay: 400ms;
+  }
+
+  /* Code Examples */
+  .code-example {
+    @apply bg-slate-900 text-slate-100 rounded-lg p-4 font-mono text-sm overflow-x-auto;
+  }
+
+  .code-example-header {
+    @apply flex items-center justify-between mb-3 pb-2 border-b border-slate-700;
+  }
+
+  .code-example-title {
+    @apply text-slate-300 text-xs uppercase tracking-wide;
+  }
+
+  /* Real-world Application Cards */
+  .application-card {
+    @apply bg-gradient-to-br from-white to-slate-50 rounded-xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all;
+  }
+
+  .application-icon {
+    @apply w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center text-white;
+  }
+
+  /* Search and Filter Components */
+  .search-container {
+    @apply relative;
+  }
+
+  .search-input {
+    @apply w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+  }
+
+  .search-results {
+    @apply absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-96 overflow-y-auto z-50;
+  }
+
+  /* Knowledge Base Navigation */
+  .kb-nav {
+    @apply bg-white border-r border-slate-200 p-4 space-y-2;
+  }
+
+  .kb-nav-item {
+    @apply flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-100 transition-colors;
+  }
+
+  .kb-nav-item.active {
+    @apply bg-primary-100 text-primary-700;
+  }
+
+  /* Explanation Panels */
+  .explanation-panel {
+    @apply bg-gradient-to-br from-blue-50 to-indigo-50 border-l-4 border-primary-500 p-4 rounded-r-lg;
+  }
+
+  .explanation-header {
+    @apply flex items-center space-x-2 mb-3;
+  }
+
+  .explanation-icon {
+    @apply w-6 h-6 text-primary-600;
+  }
+
+  .explanation-title {
+    @apply font-semibold text-slate-900;
+  }
+
+  /* Interactive Elements */
+  .interactive-button {
+    @apply inline-flex items-center px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+
+  .interactive-button:disabled {
+    @apply bg-slate-300 text-slate-500 cursor-not-allowed;
+  }
+
+  /* Responsive Grid Layouts */
+  .grid-responsive {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+
+  .grid-responsive-4 {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4;
+  }
+
+  /* Loading States */
+  .skeleton {
+    @apply animate-pulse bg-slate-200 rounded;
+  }
+
+  .skeleton-text {
+    @apply h-4 bg-slate-200 rounded animate-pulse;
+  }
+
+  .skeleton-button {
+    @apply h-10 bg-slate-200 rounded animate-pulse;
+  }
+
+  /* Notification and Toast Styles */
+  .toast-success {
+    @apply bg-success-500 text-white;
+  }
+
+  .toast-error {
+    @apply bg-danger-500 text-white;
+  }
+
+  .toast-warning {
+    @apply bg-warning-500 text-white;
+  }
+
+  .toast-info {
+    @apply bg-primary-500 text-white;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .animate-slideUp {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  .glass-morphism {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}

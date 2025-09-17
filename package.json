@@ -1,0 +1,43 @@
+{
+  "name": "gas-technician-ai-tutor",
+  "version": "1.0.0",
+  "description": "AI-powered tutoring system for Canadian Gas Technician certification with G3 and G2 specialization",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm run start",
+    "lint": "cd frontend && npm run lint",
+    "type-check": "cd frontend && npm run type-check",
+    "install-deps": "cd frontend && npm install",
+    "clean": "rm -rf frontend/.next frontend/node_modules",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "gas-technician",
+    "ai-tutor",
+    "csa-b149",
+    "canadian-gas-code",
+    "hvac-education",
+    "claude-ai",
+    "next.js",
+    "typescript"
+  ],
+  "author": "LARK Labs",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/gas-technician-ai-tutor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/gas-technician-ai-tutor/issues"
+  },
+  "homepage": "https://gas-tutor.larklabs.org",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  }
+}

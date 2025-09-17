@@ -45,7 +45,6 @@
     "ai": "^3.1.12",
     "openai": "^4.38.5",
     "socket.io-client": "^4.7.5",
-    "react-speech-kit": "^3.0.1",
     "react-pdf": "^7.7.1",
     "react-highlight-words": "^0.20.0",
     "fuse.js": "^7.0.0"

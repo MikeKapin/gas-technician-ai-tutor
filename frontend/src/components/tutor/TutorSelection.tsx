@@ -1,15 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import { BookOpen, Wrench, CheckCircle, AlertTriangle } from 'lucide-react'
 import { TutorLevel, TutorSelectionProps } from '@/types/tutor'
 
 export default function TutorSelection({ onTutorSelected }: TutorSelectionProps) {
-  const [selected, setSelected] = useState<TutorLevel | null>(null)
+  const [selectedLevel, setSelectedLevel] = useState('')
 
-  const handleSelection = (level: TutorLevel) => {
-    setSelected(level)
+  const handleTutorSelection = (level: TutorLevel) => {
+    setSelectedLevel(level)
     // Auto-proceed after selection
     setTimeout(() => {
       onTutorSelected(level)
@@ -27,7 +26,11 @@ export default function TutorSelection({ onTutorSelected }: TutorSelectionProps)
           </div>
           <p className="text-slate-300 text-sm font-medium">CSA B149.1-25 & B149.2-25 Certified Training</p>
           <div className="flex items-center justify-center mt-3">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='16' viewBox='0 0 24 16'%3E%3Crect width='24' height='16' fill='%23FF0000'/%3E%3Cpath d='M12 8L6 4v8l6-4z' fill='%23FFFFFF'/%3E%3C/svg%3E" alt="Canada Flag" className="w-6 h-4 mr-2" />
+            <img
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='16' viewBox='0 0 24 16'%3E%3Crect width='24' height='16' fill='%23FF0000'/%3E%3Cpath d='M12 8L6 4v8l6-4z' fill='%23FFFFFF'/%3E%3C/svg%3E"
+              alt="Canada Flag"
+              className="w-6 h-4 mr-2"
+            />
             <span className="text-slate-400 text-xs font-medium uppercase tracking-wider">Canadian Standards</span>
           </div>
         </div>
@@ -42,16 +45,9 @@ export default function TutorSelection({ onTutorSelected }: TutorSelectionProps)
           </div>
 
           {/* G3 Button */}
-          <motion.button
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => handleSelection('G3')}
-            className={`w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-6 px-6 rounded-xl shadow-lg transform transition-all duration-200 hover:shadow-xl border border-blue-500/20 ${
-              selected === 'G3' ? 'ring-4 ring-blue-400/50' : ''
-            }`}
+          <button
+            onClick={() => handleTutorSelection('G3')}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-6 px-6 rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 hover:shadow-xl border border-blue-500/20"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center">
@@ -68,28 +64,12 @@ export default function TutorSelection({ onTutorSelected }: TutorSelectionProps)
             <div className="mt-3 pt-3 border-t border-blue-500/20 text-xs text-blue-200 font-normal">
               Natural gas appliances up to 400,000 BTU/hr
             </div>
-            {selected === 'G3' && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="mt-2 text-blue-200 text-sm font-semibold"
-              >
-                Selected ✓
-              </motion.div>
-            )}
-          </motion.button>
+          </button>
 
           {/* G2 Button */}
-          <motion.button
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => handleSelection('G2')}
-            className={`w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-6 px-6 rounded-xl shadow-lg transform transition-all duration-200 hover:shadow-xl border border-red-500/20 ${
-              selected === 'G2' ? 'ring-4 ring-red-400/50' : ''
-            }`}
+          <button
+            onClick={() => handleTutorSelection('G2')}
+            className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-6 px-6 rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 hover:shadow-xl border border-red-500/20"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center">
@@ -106,28 +86,14 @@ export default function TutorSelection({ onTutorSelected }: TutorSelectionProps)
             <div className="mt-3 pt-3 border-t border-red-500/20 text-xs text-red-200 font-normal">
               All gas appliances & complex installations
             </div>
-            {selected === 'G2' && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="mt-2 text-red-200 text-sm font-semibold"
-              >
-                Selected ✓
-              </motion.div>
-            )}
-          </motion.button>
+          </button>
 
           {/* LARK Labs Branding */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-center mt-8"
-          >
+          <div className="text-center mt-8">
             <div className="text-slate-500 text-xs font-medium uppercase tracking-wider mb-2">Powered by</div>
             <div className="text-slate-300 text-lg font-bold tracking-wide">LARK Labs</div>
             <div className="text-slate-400 text-xs font-normal">Educational Excellence in HVAC Technology</div>
-          </motion.div>
+          </div>
         </div>
       </div>
 

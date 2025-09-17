@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { motion } from 'framer-motion'
 import { Send, Mic, ArrowLeft, Wrench } from 'lucide-react'
 import { useTutor } from '@/contexts/TutorContext'
 import { ChatMessage } from '@/types/tutor'
@@ -22,11 +21,10 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
     endSession
   } = useTutor()
 
-  const [input, setInput] = useState('')
+  const [inputMessage, setInputMessage] = useState('')
+  const [isRecording, setIsRecording] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [isListening, setIsListening] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
   const recognition = useRef<any>(null)
 
   // Auto-scroll to bottom when new messages are added
@@ -45,17 +43,17 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
 
       recognition.current.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript
-        setInput(transcript)
-        setIsListening(false)
+        setInputMessage(transcript)
+        setIsRecording(false)
       }
 
       recognition.current.onerror = () => {
-        setIsListening(false)
+        setIsRecording(false)
         toast.error('Voice recognition failed. Please try again.')
       }
 
       recognition.current.onend = () => {
-        setIsListening(false)
+        setIsRecording(false)
       }
     }
   }, [])
@@ -89,82 +87,52 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
     )
   }
 
-  const handleSendMessage = async () => {
-    if (!input.trim() || isLoading) return
-
-    const userMessage: ChatMessage = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: input.trim(),
-      timestamp: new Date()
-    }
-
-    addMessage(userMessage)
-    const messageContent = input.trim()
-    setInput('')
-    setIsLoading(true)
-
-    try {
-      const response = await aiService.generateResponse(
-        messageContent,
-        configuration.level,
-        configuration,
-        currentSession.conversationHistory
-      )
-
-      const aiMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: response.content,
-        timestamp: new Date(),
-        metadata: {
-          codeReferences: response.codeReferences,
-          moduleReferences: response.moduleReferences,
-          confidence: response.confidence,
-          sources: response.sources
-        }
+  const sendMessage = async () => {
+    if (inputMessage.trim() && !isLoading) {
+      const newMessage: ChatMessage = {
+        id: (currentSession.conversationHistory.length + 1).toString(),
+        role: 'user',
+        content: inputMessage,
+        timestamp: new Date()
       }
 
-      addMessage(aiMessage)
-    } catch (error) {
-      // Simulate AI response for demo
+      addMessage(newMessage)
+      const messageContent = inputMessage
+      setInputMessage('')
+      setIsLoading(true)
+
+      // Simulate AI response
       setTimeout(() => {
         const aiResponse: ChatMessage = {
-          id: (Date.now() + 1).toString(),
+          id: (currentSession.conversationHistory.length + 2).toString(),
           role: 'assistant',
           content: `That's a great question about ${configuration.level} gas technician requirements. Let me help you understand the CSA code requirements and safety protocols...`,
           timestamp: new Date()
         }
         addMessage(aiResponse)
+        setIsLoading(false)
       }, 1000)
-    } finally {
-      setIsLoading(false)
     }
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      e.preventDefault()
-      handleSendMessage()
+      sendMessage()
     }
   }
 
-  const startListening = () => {
-    if (recognition.current && !isListening) {
-      setIsListening(true)
+  const toggleRecording = () => {
+    if (!isRecording && recognition.current) {
+      setIsRecording(true)
       recognition.current.start()
-    }
-  }
-
-  const stopListening = () => {
-    if (recognition.current && isListening) {
+    } else if (isRecording && recognition.current) {
       recognition.current.stop()
-      setIsListening(false)
+      setIsRecording(false)
     }
   }
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex flex-col font-sans ${className}`}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex flex-col font-sans">
       {/* Header */}
       <div className="bg-slate-800/50 backdrop-blur-sm border-b border-slate-700 px-4 py-4">
         <div className="flex items-center">
@@ -184,7 +152,11 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='16' viewBox='0 0 24 16'%3E%3Crect width='24' height='16' fill='%23FF0000'/%3E%3Cpath d='M12 8L6 4v8l6-4z' fill='%23FFFFFF'/%3E%3C/svg%3E" alt="Canada" className="w-5 h-3" />
+            <img
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='16' viewBox='0 0 24 16'%3E%3Crect width='24' height='16' fill='%23FF0000'/%3E%3Cpath d='M12 8L6 4v8l6-4z' fill='%23FFFFFF'/%3E%3C/svg%3E"
+              alt="Canada"
+              className="w-5 h-3"
+            />
             <span className="text-slate-400 text-xs font-medium uppercase tracking-wider">CSA</span>
           </div>
         </div>
@@ -193,10 +165,8 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {currentSession.conversationHistory.map((message) => (
-          <motion.div
+          <div
             key={message.id}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
             className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
@@ -211,27 +181,23 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
                 {message.timestamp.toLocaleTimeString()}
               </div>
             </div>
-          </motion.div>
+          </div>
         ))}
 
-        {/* Loading Indicator */}
+        {/* Loading indicator */}
         {isLoading && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex justify-start"
-          >
+          <div className="flex justify-start">
             <div className="bg-slate-800/50 text-slate-100 mr-4 border border-slate-700/50 rounded-2xl px-4 py-3">
               <div className="flex items-center space-x-2">
                 <div className="flex items-center space-x-1">
                   <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 </div>
                 <span className="text-xs text-slate-400">AI is thinking...</span>
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
 
         <div ref={messagesEndRef} />
@@ -242,30 +208,27 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
         <div className="flex items-center space-x-3">
           <div className="flex-1 relative">
             <input
-              ref={inputRef}
               type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Ask about gas codes, safety, or certification..."
               className="w-full bg-slate-700/50 border border-slate-600 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent font-normal text-sm"
-              disabled={isLoading}
             />
           </div>
           <button
-            onClick={isListening ? stopListening : startListening}
+            onClick={toggleRecording}
             className={`p-3 rounded-xl transition-all duration-200 ${
-              isListening
+              isRecording
                 ? 'bg-red-600 hover:bg-red-700 animate-pulse'
                 : 'bg-slate-700 hover:bg-slate-600'
             }`}
-            disabled={isLoading}
           >
-            <Mic className={`h-5 w-5 ${isListening ? 'text-white' : 'text-slate-300'}`} />
+            <Mic className={`h-5 w-5 ${isRecording ? 'text-white' : 'text-slate-300'}`} />
           </button>
           <button
-            onClick={handleSendMessage}
-            disabled={!input.trim() || isLoading}
+            onClick={sendMessage}
+            disabled={!inputMessage.trim() || isLoading}
             className="p-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             <Send className="h-5 w-5 text-white" />

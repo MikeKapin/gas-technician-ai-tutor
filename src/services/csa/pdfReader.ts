@@ -227,6 +227,90 @@ This tool helps you:
   }
 
   /**
+   * Get building construction methods content
+   */
+  getBuildingConstructionContent(): CSAContent {
+    return {
+      unitNumber: 14,
+      title: 'Building as a System - Construction Methods',
+      content: `
+**CSA B149.1-25 Building Construction Methods**
+
+## The 3 Main Building Construction Methods
+
+### 1. Platform Construction (Previously called "Frame Construction")
+**Most common in residential buildings**
+- Wood or metal studs form the structural frame
+- Walls typically consist of:
+  - External siding
+  - Sheathing
+  - Insulation between studs
+  - Interior drywall/plaster
+
+**Key G3 Considerations:**
+- Requires fire stops when piping penetrates floors
+- Must use proper support intervals for gas piping
+- Common in residential installations
+- Each floor built as a separate "platform"
+
+### 2. Solid Construction
+**Load-bearing masonry walls**
+- Walls made of brick, concrete block, or stone
+- No cavity between inner and outer walls
+- Structural walls support building loads
+
+**Key G3 Considerations:**
+- Requires special anchoring methods for pipe support
+- More challenging to run new gas lines
+- Must use appropriate sleeve materials when penetrating walls
+- Solid walls require core drilling for penetrations
+
+### 3. Balloon Construction (Previously called "Cavity Wall Construction")
+**Traditional wood frame method**
+- Continuous wall studs from foundation to roof
+- Floor joists hung from studs rather than bearing on plates
+- Creates continuous cavities within walls
+
+**Key G3 Considerations:**
+- Must properly seal penetrations through cavities
+- Special attention to pipe support in wall cavities
+- Fire stopping is critical due to continuous cavities
+- More common in older buildings
+
+## Important Safety Notes for All Construction Types:
+- Each construction type requires specific fire stopping methods
+- Different support requirements apply to each type
+- Always consult building codes for penetration requirements
+- Follow **CSA B149.1-25 Section 6.15** for pipe support requirements
+
+## CSA B149.1-25 References:
+- **Section 6.15**: Pipe support and spacing requirements
+- **Section 6.16**: Penetration sealing and fire stopping
+- **Section 6.17**: Protection of piping systems
+- **Unit 14**: Building as a System considerations
+
+**🔧 Practical Tools:** For construction-specific pipe support calculations, use the **[Support Spacing Calculator](https://larklabs.org/)** to ensure proper intervals per CSA requirements.
+      `.trim(),
+      topics: [
+        'Platform Construction',
+        'Solid Construction',
+        'Balloon Construction',
+        'Fire Stopping',
+        'Pipe Support',
+        'Building Penetrations',
+        'Construction Methods',
+        'CSA B149.1-25 Section 6.15'
+      ],
+      codeReferences: [
+        'CSA B149.1-25 Section 6.15 - Pipe Support',
+        'CSA B149.1-25 Section 6.16 - Penetration Sealing',
+        'CSA B149.1-25 Section 6.17 - Piping Protection',
+        'Unit 14 - Building as a System'
+      ]
+    };
+  }
+
+  /**
    * Get relevant CSA content based on query and unit
    */
   getCSAContent(unitNumber: number): CSAContent | null {
@@ -235,6 +319,8 @@ This tool helps you:
         return this.getUnit1SafetyContent();
       case 8:
         return this.getUnit8PipingContent();
+      case 14:
+        return this.getBuildingConstructionContent();
       default:
         return null;
     }
@@ -259,6 +345,11 @@ This tool helps you:
     if (queryLower.includes('safety') || queryLower.includes('clearance') || queryLower.includes('emergency')) {
       const unit1 = this.getCSAContent(1);
       if (unit1) results.push(unit1);
+    }
+
+    if (queryLower.includes('construction') || queryLower.includes('building') || queryLower.includes('platform') || queryLower.includes('balloon') || queryLower.includes('solid') || queryLower.includes('frame') || queryLower.includes('cavity')) {
+      const unit14 = this.getCSAContent(14);
+      if (unit14) results.push(unit14);
     }
 
     return results;

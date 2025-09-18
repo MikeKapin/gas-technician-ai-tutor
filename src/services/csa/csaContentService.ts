@@ -91,7 +91,14 @@ class CSAContentService {
       'clearance': [1, 21, 22],
       'installation': [8, 9, 10, 15],
       'commercial': [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-      'pressure': [11, 8, 10]
+      'pressure': [11, 8, 10],
+      'building': [14],
+      'construction': [14],
+      'platform construction': [14],
+      'balloon construction': [14],
+      'solid construction': [14],
+      'frame construction': [14],
+      'cavity wall': [14]
     };
 
     const relevantUnitNumbers = new Set<number>();

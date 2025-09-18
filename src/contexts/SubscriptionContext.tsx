@@ -31,9 +31,17 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const modeParam = params.get('mode');
+    const successParam = params.get('success');
+    const newSubscriber = params.get('new');
 
     if (modeParam === 'pro' || modeParam === 'free') {
       setMode(modeParam as SubscriptionMode);
+
+      // If this is a new pro subscriber from payment success, show PWA prompt
+      if (modeParam === 'pro' && (successParam === 'true' || newSubscriber === 'true')) {
+        // Store flag to show PWA prompt after mode is set
+        sessionStorage.setItem('show-pwa-success', 'true');
+      }
     }
 
     // Check for subscription status in localStorage (for persistent pro users)

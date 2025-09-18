@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import TutorSelection from '@/components/tutor/TutorSelection';
 import ChatInterface from '@/components/chat/ChatInterface';
 import PWAInstallPrompt from '@/components/pwa/PWAInstallPrompt';
+import PWASuccessPrompt from '@/components/pwa/PWASuccessPrompt';
 import { CertificationLevel } from '@/types';
 
 export default function Home() {
@@ -22,6 +23,9 @@ export default function Home() {
 
   return (
     <>
+      {/* PWA Success Prompt for new subscribers */}
+      <PWASuccessPrompt />
+
       {currentView === 'selection' && (
         <div className="fixed top-4 left-4 right-4 z-50 max-w-md mx-auto">
           <PWAInstallPrompt />

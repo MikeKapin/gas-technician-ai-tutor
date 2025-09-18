@@ -107,13 +107,14 @@ class CSAPDFReader {
 - **Document** all installations per TSSA requirements
 
 ### 🔧 **Helpful Tools:**
-For practical pipe sizing calculations, use the **Pipe Sizing Calculator** at:
-**[LARK Labs Tools - Pipe Sizing Calculator](https://www.larklabs.org/tools)**
+For practical pipe sizing calculations, use the **Canadian Gas Pipe Sizing Calculator** at:
+**[Canadian Gas Pipe Sizing Calculator](https://larklabs.org/apps/calculators/canadian-gas-piping-calculator.html)**
 
 This tool helps you:
-- Input BTU loads and pipe lengths
-- Get instant pipe size recommendations
-- Verify calculations per CSA B149.1-25
+- Input BTU loads and actual pipe lengths
+- Get instant pipe size recommendations per CSA B149.1-25
+- No equivalent length calculations needed (tables handle this)
+- Verify your manual calculations
 - Generate documentation for your records
       `.trim(),
       topics: [

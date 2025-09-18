@@ -17,9 +17,9 @@ class ToolReferencesService {
 
   private tools: LarkLabsTool[] = [
     {
-      name: 'Pipe Sizing Calculator',
+      name: 'Canadian Gas Pipe Sizing Calculator',
       description: 'Interactive calculator for gas pipe sizing per CSA B149.1-25',
-      url: `${this.baseUrl}/tools`,
+      url: 'https://larklabs.org/apps/calculators/canadian-gas-piping-calculator.html',
       applicableTo: ['pipe sizing', 'piping', 'BTU calculations', 'pressure drop'],
       relevantUnits: [8, 10],
       useCase: 'Calculate proper pipe sizes based on BTU load and actual pipe length'
@@ -146,7 +146,7 @@ class ToolReferencesService {
    * Get specific tool for pipe sizing
    */
   getPipeSizingToolReference(): string {
-    const pipeTool = this.tools.find(tool => tool.name === 'Pipe Sizing Calculator');
+    const pipeTool = this.tools.find(tool => tool.name === 'Canadian Gas Pipe Sizing Calculator');
     if (pipeTool) {
       return `\n\n🔧 **Recommended Tool:**\n**[${pipeTool.name}](${pipeTool.url})**\n${pipeTool.description}\n*${pipeTool.useCase}*`;
     }

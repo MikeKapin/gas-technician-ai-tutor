@@ -5,24 +5,60 @@ import { useSubscription } from '@/contexts/SubscriptionContext';
 import { Sparkles, Crown, Zap } from 'lucide-react';
 
 const SubscriptionBanner: React.FC = () => {
-  const { mode, hasAIAccess, messagesUsed, messageLimit } = useSubscription();
+  const { mode, hasAIAccess, messagesUsed, messageLimit, daysRemaining, isExpiringSoon } = useSubscription();
 
   if (mode === 'pro') {
     return (
-      <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-lg p-4 mb-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Crown className="h-6 w-6 text-yellow-400" />
-            <div>
-              <div className="text-white font-semibold">AI Tutor Pro</div>
-              <div className="text-blue-200 text-sm">Unlimited AI interactions & advanced features</div>
+      <div>
+        <div className={`bg-gradient-to-r rounded-lg p-4 mb-4 ${
+          isExpiringSoon
+            ? 'from-orange-600/20 to-red-600/20 border border-orange-500/30'
+            : 'from-blue-600/20 to-purple-600/20 border border-blue-500/30'
+        }`}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Crown className="h-6 w-6 text-yellow-400" />
+              <div>
+                <div className="text-white font-semibold">AI Tutor Pro</div>
+                <div className={`text-sm ${isExpiringSoon ? 'text-orange-200' : 'text-blue-200'}`}>
+                  {daysRemaining === 1
+                    ? 'Expires in 1 day'
+                    : `${daysRemaining} days remaining`}
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Sparkles className="h-5 w-5 text-yellow-400" />
+              <span className="text-yellow-400 font-medium">ACTIVE</span>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Sparkles className="h-5 w-5 text-yellow-400" />
-            <span className="text-yellow-400 font-medium">ACTIVE</span>
-          </div>
         </div>
+
+        {/* Renewal reminder for last 5 days */}
+        {isExpiringSoon && (
+          <div className="bg-gradient-to-r from-green-600/20 to-emerald-600/20 border border-green-500/30 rounded-lg p-4 mb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="bg-green-700 p-2 rounded-lg">
+                  <Crown className="h-5 w-5 text-green-300" />
+                </div>
+                <div>
+                  <div className="text-white font-semibold">Extend Your Pro Access</div>
+                  <div className="text-green-200 text-sm">
+                    Continue unlimited AI tutoring for another 30 days
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => window.open(process.env.NEXT_PUBLIC_STRIPE_PAYMENT_URL, '_blank')}
+                className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2"
+              >
+                <Crown className="h-4 w-4" />
+                <span>Extend 30 Days</span>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -47,7 +83,7 @@ const SubscriptionBanner: React.FC = () => {
           </div>
         </div>
         <button
-          onClick={() => window.open('https://buy.stripe.com/5kQeVefxX2VmbCS0tO7ok05', '_blank')}
+          onClick={() => window.open(process.env.NEXT_PUBLIC_STRIPE_PAYMENT_URL, '_blank')}
           className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2"
         >
           <Crown className="h-4 w-4" />

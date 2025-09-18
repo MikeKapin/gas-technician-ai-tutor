@@ -13,7 +13,7 @@ interface LarkLabsTool {
 }
 
 class ToolReferencesService {
-  private readonly baseUrl = 'https://www.larklabs.org';
+  private readonly baseUrl = 'https://larklabs.org';
 
   private tools: LarkLabsTool[] = [
     {
@@ -25,17 +25,17 @@ class ToolReferencesService {
       useCase: 'Calculate proper pipe sizes based on BTU load and actual pipe length'
     },
     {
-      name: 'Gas Load Calculator',
-      description: 'Calculate total gas loads for multiple appliances',
-      url: `${this.baseUrl}/tools`,
-      applicableTo: ['BTU calculations', 'load calculations', 'appliance sizing'],
-      relevantUnits: [8, 9, 15],
-      useCase: 'Determine total BTU requirements for gas installations'
+      name: 'HVAC Load Calculator',
+      description: 'Calculate heating and cooling loads for gas appliances',
+      url: 'https://larklabs.org/apps/calculators/hvac-load-calculator.html',
+      applicableTo: ['BTU calculations', 'load calculations', 'appliance sizing', 'heating load', 'cooling load'],
+      relevantUnits: [8, 9, 15, 19, 20],
+      useCase: 'Determine proper heating/cooling loads for gas system design'
     },
     {
       name: 'Pressure Drop Calculator',
       description: 'Verify pressure drop calculations for gas piping systems',
-      url: `${this.baseUrl}/tools`,
+      url: 'https://larklabs.org/',
       applicableTo: ['pressure drop', 'piping', 'system design'],
       relevantUnits: [8, 10, 11],
       useCase: 'Ensure pressure drop stays within CSA B149.1-25 limits'
@@ -43,7 +43,7 @@ class ToolReferencesService {
     {
       name: 'Clearance Reference Guide',
       description: 'Interactive clearance requirements for gas appliances',
-      url: `${this.baseUrl}/tools`,
+      url: 'https://larklabs.org/',
       applicableTo: ['clearances', 'safety', 'installation', 'appliances'],
       relevantUnits: [1, 9, 15, 21, 22],
       useCase: 'Verify proper clearances for safe appliance installation'
@@ -51,7 +51,7 @@ class ToolReferencesService {
     {
       name: 'Venting Calculator',
       description: 'Calculate proper venting requirements for gas appliances',
-      url: `${this.baseUrl}/tools`,
+      url: 'https://larklabs.org/',
       applicableTo: ['venting', 'vent sizing', 'appliances', 'clearances'],
       relevantUnits: [22],
       useCase: 'Size venting systems per CSA B149.1-25 requirements'
@@ -59,7 +59,7 @@ class ToolReferencesService {
     {
       name: 'Code Compass',
       description: 'Interactive CSA code navigation and reference system',
-      url: `${this.baseUrl}/tools`,
+      url: 'https://larklabs.org/',
       applicableTo: ['codes', 'regulations', 'CSA B149', 'code lookup', 'compliance'],
       relevantUnits: [4], // Code and Regulations unit
       useCase: 'Navigate CSA B149.1-25 and B149.2-25 codes with intelligent search and cross-references'
@@ -67,7 +67,7 @@ class ToolReferencesService {
     {
       name: 'HVAC Jack 4.0 Troubleshooting Assistant',
       description: 'AI-powered diagnostic and troubleshooting assistant for gas appliances',
-      url: `${this.baseUrl}/tools`,
+      url: 'https://larklabs.org/',
       applicableTo: ['troubleshooting', 'diagnostics', 'appliance repair', 'service', 'maintenance', 'problems', 'issues'],
       relevantUnits: [9, 13, 15, 16, 17, 18, 19, 20, 21],
       useCase: 'Step-by-step troubleshooting guidance for gas appliance service and repair'
@@ -75,7 +75,7 @@ class ToolReferencesService {
     {
       name: 'Gas Technician Study Tools',
       description: 'Interactive study materials and practice tests',
-      url: `${this.baseUrl}/tools`,
+      url: 'https://larklabs.org/',
       applicableTo: ['study', 'exam prep', 'certification', 'practice'],
       relevantUnits: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
       useCase: 'Practice questions and interactive learning for G3/G2 certification'
@@ -125,7 +125,7 @@ class ToolReferencesService {
     const relevantTools = this.findRelevantTools(query, unitNumbers);
 
     if (relevantTools.length === 0) {
-      return `\n\n🔧 **Additional Resources:**\nFor more gas technician tools and calculators, visit: **[LARK Labs Tools](${this.baseUrl}/tools)**`;
+      return `\n\n🔧 **Additional Resources:**\nFor more gas technician tools and calculators, visit: **[LARK Labs Tools](https://larklabs.org/)**`;
     }
 
     let toolSection = '\n\n🔧 **Helpful Tools from LARK Labs:**\n\n';
@@ -137,7 +137,7 @@ class ToolReferencesService {
       toolSection += `*Use case: ${tool.useCase}*\n\n`;
     });
 
-    toolSection += `*Visit **[LARK Labs Tools](${this.baseUrl}/tools)** for the complete collection of gas technician calculators and resources.*`;
+    toolSection += `*Visit **[LARK Labs Tools](https://larklabs.org/)** for the complete collection of gas technician calculators and resources.*`;
 
     return toolSection;
   }

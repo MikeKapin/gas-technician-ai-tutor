@@ -72,26 +72,36 @@ class CSAPDFReader {
 ### Key Principles:
 1. **Actual Length Method**: Use the measured pipe length directly with CSA sizing tables
 2. **No Equivalent Length Additions**: CSA B149.1-25 sizing tables already include allowances for fittings
-3. **Pressure Drop Limits**: Maximum 0.5" w.c. for residential applications
+3. **Pressure Drop Limits**: Determined by table selection from Annex A and Annex B
+   - **Table A.1** (under 7" w.c.): 0.5" w.c. pressure drop maximum
+   - **Table A.2** (7-14" w.c.): 1.0" w.c. pressure drop maximum for residential
+   - **Higher pressures**: Use Annex B tables with appropriate pressure drop limits
 
 ### Sizing Process:
 1. Calculate total BTU load of all appliances
 2. Measure actual pipe length (no fitting equivalents needed)
-3. Select appropriate sizing table from CSA B149.1-25 Appendix A
+3. **Select correct table based on operating pressure:**
+   - **Table A.1**: Under 7" w.c. operating pressure → 0.5" w.c. pressure drop allowed
+   - **Table A.2**: 7-14" w.c. operating pressure → 1.0" w.c. pressure drop allowed (residential)
+   - **Annex B tables**: For higher pressures and commercial applications
 4. Cross-reference BTU load and pipe length to determine minimum pipe size
 
 ### CSA B149.1-25 References:
 - **Section 6.2**: Pipe sizing requirements
 - **Section 6.3**: Pressure testing procedures
-- **Appendix A**: Pipe sizing tables for natural gas
-- **Table 6.1**: Maximum pressure drop allowances
+- **Appendix A**: Natural gas pipe sizing tables
+  - **Table A.1**: Under 7" w.c. operating pressure (0.5" w.c. pressure drop)
+  - **Table A.2**: 7-14" w.c. operating pressure (1.0" w.c. pressure drop - residential)
+- **Annex B**: Higher pressure applications and commercial systems
 
 **💡 Pro Tip:** Use **[Code Compass](https://www.larklabs.org/tools)** for quick CSA code lookups and cross-references
 
 ### Common G3 Applications:
 - Residential furnaces, water heaters, ranges
 - Maximum individual appliance: 400,000 BTU/hr
-- Standard operating pressure: 7" w.c.
+- **Table Selection**:
+  - **Most residential**: Table A.1 (under 7" w.c., 0.5" pressure drop)
+  - **Higher pressure residential**: Table A.2 (7-14" w.c., 1.0" pressure drop)
 - Typical pipe sizes: 1/2" to 1-1/4"
 
 ### Safety Requirements:
@@ -112,8 +122,10 @@ For practical pipe sizing calculations, use the **Canadian Gas Pipe Sizing Calcu
 
 This tool helps you:
 - Input BTU loads and actual pipe lengths
+- **Select correct pressure table** (A.1 for under 7" w.c., A.2 for 7-14" w.c.)
 - Get instant pipe size recommendations per CSA B149.1-25
 - No equivalent length calculations needed (tables handle this)
+- **Automatic pressure drop compliance** based on table selection
 - Verify your manual calculations
 - Generate documentation for your records
       `.trim(),

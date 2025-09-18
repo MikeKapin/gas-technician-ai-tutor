@@ -152,3 +152,6 @@ MIT License - Built for Canadian Gas Technician education
 **🎯 Training the next generation of certified Canadian Gas Technicians with AI-enhanced education**
 
 Built with ❤️ by LARK Labs | Powered by Anthropic Claude | 🇨🇦 CSA Compliant
+
+---
+*Clean deployment - v2.0.1*

@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Wrench, Mic, Send } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import { CertificationLevel, Message } from '@/types';
 
 interface ChatInterfaceProps {
@@ -221,7 +222,53 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedLevel, onBack }) 
                   : 'bg-slate-800/50 text-slate-100 mr-4 border border-slate-700/50'
               }`}
             >
-              <div className="text-sm font-normal leading-relaxed">{message.content}</div>
+              <div className="text-sm font-normal leading-relaxed">
+                {message.type === 'ai' ? (
+                  <ReactMarkdown
+                    components={{
+                      a: ({ node, ...props }) => (
+                        <a
+                          {...props}
+                          className="text-blue-300 hover:text-blue-100 underline transition-colors cursor-pointer touch-manipulation"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        />
+                      ),
+                      strong: ({ node, ...props }) => (
+                        <strong {...props} className="font-semibold text-white" />
+                      ),
+                      h1: ({ node, ...props }) => (
+                        <h1 {...props} className="text-lg font-bold text-white mb-2" />
+                      ),
+                      h2: ({ node, ...props }) => (
+                        <h2 {...props} className="text-base font-semibold text-white mb-2" />
+                      ),
+                      h3: ({ node, ...props }) => (
+                        <h3 {...props} className="text-sm font-semibold text-white mb-1" />
+                      ),
+                      ul: ({ node, ...props }) => (
+                        <ul {...props} className="list-disc list-inside ml-2 mb-2" />
+                      ),
+                      ol: ({ node, ...props }) => (
+                        <ol {...props} className="list-decimal list-inside ml-2 mb-2" />
+                      ),
+                      li: ({ node, ...props }) => (
+                        <li {...props} className="mb-1" />
+                      ),
+                      p: ({ node, ...props }) => (
+                        <p {...props} className="mb-2 last:mb-0" />
+                      ),
+                      code: ({ node, ...props }) => (
+                        <code {...props} className="bg-slate-700 px-1 py-0.5 rounded text-xs font-mono" />
+                      )
+                    }}
+                  >
+                    {message.content}
+                  </ReactMarkdown>
+                ) : (
+                  message.content
+                )}
+              </div>
               <div className={`text-xs mt-2 font-medium ${
                 message.type === 'user' ? 'text-blue-200' : 'text-slate-400'
               }`}>

@@ -26,57 +26,105 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedLevel, onBack }) 
   useEffect(() => {
     // Add welcome message when component mounts
     const welcomeMessage: Message = {
-      id: 1,
+      id: `welcome_${Date.now()}`,
       type: 'ai',
+      role: 'assistant',
       content: selectedLevel === 'G3'
-        ? "Welcome to your G3 Gas Technician Tutor! I'm here to help you with CSA B149.1-25 and B149.2-25 codes, basic gas installation procedures, and G3 certification preparation. Ask me about natural gas appliances up to 400,000 BTU/hr, safety protocols, or code requirements."
-        : "Welcome to your G2 Gas Technician Tutor! I'm here to help you with advanced CSA B149.1-25 and B149.2-25 codes, complex gas systems, and G2 certification preparation. Ask me about all gas appliances, advanced installations, commercial systems, or complex troubleshooting scenarios.",
-      timestamp: new Date().toLocaleTimeString()
+        ? "Welcome to your G3 Gas Technician Tutor! I'm here to help you with CSA B149.1-25 codes, basic gas installation procedures, and G3 certification preparation. Ask me about natural gas appliances up to 400,000 BTU/hr, safety protocols, or code requirements from Units 1-9."
+        : "Welcome to your G2 Gas Technician Tutor! I'm here to help you with advanced CSA B149.1-25 and B149.2-25 codes, complex gas systems, and G2 certification preparation. Ask me about all gas appliances, advanced installations, commercial systems, or complex troubleshooting scenarios from Units 10-24.",
+      timestamp: new Date()
     };
     setMessages([welcomeMessage]);
   }, [selectedLevel]);
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (!inputMessage.trim()) return;
 
+    const userMessage = inputMessage;
     const newMessage: Message = {
-      id: messages.length + 1,
+      id: `user_${Date.now()}`,
       type: 'user',
-      content: inputMessage,
-      timestamp: new Date().toLocaleTimeString()
+      role: 'user',
+      content: userMessage,
+      timestamp: new Date(),
     };
 
     setMessages(prev => [...prev, newMessage]);
     setInputMessage('');
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // Get AI response
+      const aiContent = await getAIResponse(userMessage, selectedLevel);
+
       const aiResponse: Message = {
-        id: messages.length + 2,
+        id: `ai_${Date.now()}`,
         type: 'ai',
-        content: getAIResponse(inputMessage, selectedLevel),
-        timestamp: new Date().toLocaleTimeString()
+        role: 'assistant',
+        content: aiContent,
+        timestamp: new Date(),
       };
+
       setMessages(prev => [...prev, aiResponse]);
-    }, 1000);
+    } catch (error) {
+      console.error('Failed to get AI response:', error);
+
+      // Add error message
+      const errorResponse: Message = {
+        id: `error_${Date.now()}`,
+        type: 'ai',
+        role: 'assistant',
+        content: "I'm having trouble connecting right now. Please try again in a moment.",
+        timestamp: new Date(),
+      };
+
+      setMessages(prev => [...prev, errorResponse]);
+    }
   };
 
-  const getAIResponse = (userMessage: string, level: CertificationLevel): string => {
-    const responses = {
-      G3: [
-        "That's a great question about G3 gas technician requirements. For natural gas appliances up to 400,000 BTU/hr, CSA B149.1-25 requires specific installation procedures and safety protocols...",
-        "According to CSA B149.1-25 standards for G3 technicians, proper ventilation and clearance requirements are essential for safe gas appliance installation...",
-        "For G3 certification preparation, understanding the BTU capacity limits and basic gas installation procedures is crucial for your exam success..."
-      ],
-      G2: [
-        "Excellent question regarding G2 advanced gas systems. CSA B149.1-25 and B149.2-25 outline comprehensive requirements for complex installations and commercial systems...",
-        "As a G2 technician, you'll work with all gas appliances including complex commercial systems. Understanding advanced troubleshooting and system design is essential...",
-        "For G2 certification, mastering both residential and commercial gas systems, including proper testing procedures and safety protocols, is required..."
-      ]
-    };
+  const getAIResponse = async (userMessage: string, level: CertificationLevel): Promise<string> => {
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          level: level,
+          conversationHistory: messages
+        }),
+      });
 
-    const levelResponses = responses[level];
-    return levelResponses[Math.floor(Math.random() * levelResponses.length)];
+      if (!response.ok) {
+        throw new Error('Failed to get AI response');
+      }
+
+      const data = await response.json();
+      return data.response;
+    } catch (error) {
+      console.error('Error getting AI response:', error);
+
+      // Enhanced fallback responses
+      const fallbackResponses = {
+        G3: [
+          "That's an excellent question about G3 gas technician requirements. For residential and small commercial installations up to 400,000 BTU/hr, CSA B149.1-25 provides comprehensive guidance on installation procedures and safety protocols. Focus on Units 1-9 for fundamental competencies including safety, gas properties, codes, and basic appliance systems.",
+
+          "According to CSA B149.1-25 standards for G3 technicians, proper clearances and installation requirements are essential. Remember to study Unit 4 (Code and Regulations) and Unit 8 (Piping Systems) for thorough understanding of residential gas systems.",
+
+          "For G3 certification success, master the fundamentals covered in Units 1-9: Safety procedures, tools and testing, gas properties, electrical basics, and appliance installations. These modules provide the foundation for safe residential gas work."
+        ],
+        G2: [
+          "Excellent question regarding G2 advanced gas systems. CSA B149.1-25 and B149.2-25 provide comprehensive coverage for large commercial and industrial installations. Units 10-24 cover advanced topics including pressure regulators, controls, complex appliances, and sophisticated venting systems.",
+
+          "As a G2 technician, you'll handle unlimited BTU capacity systems and complex multi-appliance installations. Study Units 19-20 (Heating Systems) and Units 22-24 (Venting and Air Handling) for comprehensive understanding of commercial applications.",
+
+          "For G2 certification, mastering both codes is essential. Focus on Units 10-15 for advanced systems knowledge, and Units 16-24 for specialized appliances and complex installations. This advanced training prepares you for industrial and large commercial work."
+        ]
+      };
+
+      const responses = fallbackResponses[level];
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -146,7 +194,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedLevel, onBack }) 
               <div className={`text-xs mt-2 font-medium ${
                 message.type === 'user' ? 'text-blue-200' : 'text-slate-400'
               }`}>
-                {message.timestamp}
+                {message.timestamp instanceof Date ? message.timestamp.toLocaleTimeString() : message.timestamp}
               </div>
             </div>
           </div>

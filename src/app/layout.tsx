@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -16,7 +16,6 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'LARK Labs' }],
   creator: 'LARK Labs',
-  viewport: 'width=device-width, initial-scale=1',
   robots: 'index, follow',
   openGraph: {
     title: 'Canadian Gas Technician Tutor | G3 G2 Certification',
@@ -31,6 +30,12 @@ export const metadata: Metadata = {
   }
 }
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#0f172a',
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -39,10 +44,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta name="theme-color" content="#0f172a" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <link rel="icon" href="/favicon.ico" />
       </head>
       <body className="font-sans antialiased">
         <main className="min-h-screen">

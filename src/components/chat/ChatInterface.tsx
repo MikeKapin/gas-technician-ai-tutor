@@ -13,6 +13,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedLevel, onBack }) 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isRecording, setIsRecording] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'disconnected'>('checking');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -24,6 +25,20 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedLevel, onBack }) 
   }, [messages]);
 
   useEffect(() => {
+    // Check API connection status
+    const checkConnection = async () => {
+      try {
+        const response = await fetch('/api/chat');
+        const data = await response.json();
+        setConnectionStatus(data.connection_status === 'connected' ? 'connected' : 'disconnected');
+      } catch (error) {
+        console.error('Connection check failed:', error);
+        setConnectionStatus('disconnected');
+      }
+    };
+
+    checkConnection();
+
     // Add welcome message when component mounts
     const welcomeMessage: Message = {
       id: `welcome_${Date.now()}`,
@@ -68,12 +83,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedLevel, onBack }) 
     } catch (error) {
       console.error('Failed to get AI response:', error);
 
-      // Add error message
+      // Add error message with connection status info
       const errorResponse: Message = {
         id: `error_${Date.now()}`,
         type: 'ai',
         role: 'assistant',
-        content: "I'm having trouble connecting right now. Please try again in a moment.",
+        content: `I'm having trouble connecting right now (Status: ${connectionStatus}). ${connectionStatus === 'disconnected' ? 'The AI service appears to be offline - using fallback responses.' : 'Please try again in a moment.'}`,
         timestamp: new Date(),
       };
 
@@ -96,10 +111,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedLevel, onBack }) 
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get AI response');
+        console.error('API Response Error:', response.status, response.statusText);
+        const errorText = await response.text();
+        console.error('Error details:', errorText);
+        throw new Error(`API Error: ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
+      console.log('API Response:', data);
       return data.response;
     } catch (error) {
       console.error('Error getting AI response:', error);
@@ -156,7 +175,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedLevel, onBack }) 
             </div>
             <div>
               <div className="text-white font-semibold tracking-wide">{selectedLevel} Gas Technician</div>
-              <div className="text-slate-400 text-xs font-medium">AI Tutor Online • LARK Labs</div>
+              <div className="text-slate-400 text-xs font-medium flex items-center">
+                <div className={`w-2 h-2 rounded-full mr-2 ${
+                  connectionStatus === 'connected' ? 'bg-green-400' :
+                  connectionStatus === 'disconnected' ? 'bg-red-400' : 'bg-yellow-400'
+                }`}></div>
+                AI Tutor {connectionStatus === 'connected' ? 'Connected' :
+                         connectionStatus === 'disconnected' ? 'Offline' : 'Checking...'} • LARK Labs
+              </div>
             </div>
           </div>
           <div className="flex items-center space-x-2">

@@ -9,8 +9,8 @@ class AIService {
     this.config = {
       provider,
       apiKey: provider === 'openai'
-        ? process.env.NEXT_PUBLIC_OPENAI_API_KEY || ''
-        : process.env.NEXT_PUBLIC_ANTHROPIC_API_KEY || '',
+        ? process.env.OPENAI_API_KEY || ''
+        : process.env.ANTHROPIC_API_KEY || '',
       model: provider === 'openai'
         ? process.env.NEXT_PUBLIC_OPENAI_MODEL || 'gpt-4-turbo-preview'
         : process.env.NEXT_PUBLIC_CLAUDE_MODEL || 'claude-3-sonnet-20240229'

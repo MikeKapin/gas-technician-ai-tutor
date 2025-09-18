@@ -19,8 +19,8 @@ The app is configured to use Anthropic Claude for enhanced AI responses. To enab
    NEXT_PUBLIC_APP_NAME="Canadian Gas Technician Tutor"
    NEXT_PUBLIC_CSA_VERSION="B149.1-25, B149.2-25"
 
-   # Anthropic API Configuration
-   NEXT_PUBLIC_ANTHROPIC_API_KEY=your-actual-anthropic-api-key-here
+   # Anthropic API Configuration (SERVER-SIDE ONLY - NEVER EXPOSE TO BROWSER)
+   ANTHROPIC_API_KEY=your-actual-anthropic-api-key-here
    NEXT_PUBLIC_AI_PROVIDER=anthropic
    NEXT_PUBLIC_CLAUDE_MODEL=claude-3-sonnet-20240229
 
@@ -98,9 +98,9 @@ If `connection_status` shows "disconnected", check your API key configuration.
 If you prefer OpenAI instead of Anthropic, update your `.env.local`:
 
 ```env
-# OpenAI Configuration (alternative)
+# OpenAI Configuration (alternative) (SERVER-SIDE ONLY)
 NEXT_PUBLIC_AI_PROVIDER=openai
-NEXT_PUBLIC_OPENAI_API_KEY=your-openai-api-key-here
+OPENAI_API_KEY=your-openai-api-key-here
 NEXT_PUBLIC_OPENAI_MODEL=gpt-4-turbo-preview
 ```
 

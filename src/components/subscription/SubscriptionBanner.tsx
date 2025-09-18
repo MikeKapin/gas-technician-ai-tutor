@@ -47,7 +47,7 @@ const SubscriptionBanner: React.FC = () => {
           </div>
         </div>
         <button
-          onClick={() => window.open('https://larklabs.org/canadian-gas-technician-ai-tutor.html', '_blank')}
+          onClick={() => window.location.href = '/checkout'}
           className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2"
         >
           <Crown className="h-4 w-4" />

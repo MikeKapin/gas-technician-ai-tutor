@@ -97,6 +97,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedLevel, onBack }) 
   };
 
   const getAIResponse = async (userMessage: string, level: CertificationLevel): Promise<string> => {
+    console.log('🚀 Starting API call to /api/chat');
+    console.log('Request data:', { message: userMessage, level, historyCount: messages.length });
+
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -110,18 +113,20 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedLevel, onBack }) 
         }),
       });
 
+      console.log('📡 Raw response status:', response.status, response.statusText);
+
       if (!response.ok) {
-        console.error('API Response Error:', response.status, response.statusText);
+        console.error('❌ API Response Error:', response.status, response.statusText);
         const errorText = await response.text();
         console.error('Error details:', errorText);
         throw new Error(`API Error: ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
-      console.log('API Response:', data);
+      console.log('✅ API Response received:', data);
       return data.response;
     } catch (error) {
-      console.error('Error getting AI response:', error);
+      console.error('💥 Catch block - Error getting AI response:', error);
 
       // Enhanced fallback responses
       const fallbackResponses = {

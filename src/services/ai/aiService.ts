@@ -1,5 +1,6 @@
 import { TutorLevel, ChatMessage, TutorConfiguration, CodeReference, ModuleReference, AIResponse, AIServiceConfig, TUTOR_CONFIGURATIONS } from '@/types'
 import { csaPDFReader } from '@/services/csa/pdfReader'
+import { toolReferencesService } from '@/services/csa/toolReferences'
 
 class AIService {
   private config: AIServiceConfig
@@ -163,6 +164,9 @@ class AIService {
     // Get relevant CSA content for this query
     const relevantCSAContent = csaPDFReader.searchCSAContent(userQuery, tutorLevel);
 
+    // Get relevant unit numbers for tool recommendations
+    const relevantUnitNumbers = relevantCSAContent.map(content => content.unitNumber);
+
     let csaContentSection = '';
     if (relevantCSAContent.length > 0) {
       csaContentSection = '\n\n**RELEVANT CSA TRAINING CONTENT:**\n\n';
@@ -171,6 +175,9 @@ class AIService {
       });
       csaContentSection += '**END CSA CONTENT**\n\n';
     }
+
+    // Get tool recommendations
+    const toolRecommendations = toolReferencesService.generateToolRecommendations(userQuery, relevantUnitNumbers);
 
     return `You are a specialized ${tutorLevel} Gas Technician AI Tutor for Canadian gas installations. You are an expert in:
 
@@ -246,7 +253,13 @@ ${csaContentSection}
 - Start with direct answer based on CSA content
 - Provide CSA code references where applicable
 - Include relevant safety considerations
-- Use "Code Compass" explanation style for complex concepts`
+- Use "Code Compass" explanation style for complex concepts
+- **ALWAYS end responses with relevant LARK Labs tool recommendations**
+
+**LARK LABS TOOL INTEGRATION:**
+${toolRecommendations}
+
+**IMPORTANT:** Always include the relevant LARK Labs tools section at the end of your response to help users with practical applications and calculations.`
   }
 
   private formatChatHistory(conversationHistory: ChatMessage[]): { role: string, content: string }[] {

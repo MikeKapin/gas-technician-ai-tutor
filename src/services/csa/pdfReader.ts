@@ -103,6 +103,16 @@ class CSAPDFReader {
 - **Always verify** with current CSA B149.1-25 code
 - **Pressure test** all new installations per Section 7
 - **Document** all installations per TSSA requirements
+
+### 🔧 **Helpful Tools:**
+For practical pipe sizing calculations, use the **Pipe Sizing Calculator** at:
+**[LARK Labs Tools - Pipe Sizing Calculator](https://www.larklabs.org/tools)**
+
+This tool helps you:
+- Input BTU loads and pipe lengths
+- Get instant pipe size recommendations
+- Verify calculations per CSA B149.1-25
+- Generate documentation for your records
       `.trim(),
       topics: [
         'Pipe Sizing',

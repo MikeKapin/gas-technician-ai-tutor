@@ -7,6 +7,11 @@ import { Sparkles, Crown, Zap } from 'lucide-react';
 const SubscriptionBanner: React.FC = () => {
   const { mode, hasAIAccess, messagesUsed, messageLimit, daysRemaining, isExpiringSoon } = useSubscription();
 
+  const stripePaymentUrl = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_URL || 'https://buy.stripe.com/5kQeVefxX2VmbCS0tO7ok05';
+
+  // Debug log to see what URL we're using
+  console.log('Stripe Payment URL:', stripePaymentUrl);
+
   if (mode === 'pro') {
     return (
       <div>
@@ -50,7 +55,7 @@ const SubscriptionBanner: React.FC = () => {
                 </div>
               </div>
               <button
-                onClick={() => window.open(process.env.NEXT_PUBLIC_STRIPE_PAYMENT_URL, '_blank')}
+                onClick={() => window.open(stripePaymentUrl, '_blank')}
                 className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2"
               >
                 <Crown className="h-4 w-4" />
@@ -83,7 +88,7 @@ const SubscriptionBanner: React.FC = () => {
           </div>
         </div>
         <button
-          onClick={() => window.open(process.env.NEXT_PUBLIC_STRIPE_PAYMENT_URL, '_blank')}
+          onClick={() => window.open(stripePaymentUrl, '_blank')}
           className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2"
         >
           <Crown className="h-4 w-4" />

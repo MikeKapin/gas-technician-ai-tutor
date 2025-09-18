@@ -57,6 +57,22 @@ class ToolReferencesService {
       useCase: 'Size venting systems per CSA B149.1-25 requirements'
     },
     {
+      name: 'Code Compass',
+      description: 'Interactive CSA code navigation and reference system',
+      url: `${this.baseUrl}/tools`,
+      applicableTo: ['codes', 'regulations', 'CSA B149', 'code lookup', 'compliance'],
+      relevantUnits: [4], // Code and Regulations unit
+      useCase: 'Navigate CSA B149.1-25 and B149.2-25 codes with intelligent search and cross-references'
+    },
+    {
+      name: 'HVAC Jack 4.0 Troubleshooting Assistant',
+      description: 'AI-powered diagnostic and troubleshooting assistant for gas appliances',
+      url: `${this.baseUrl}/tools`,
+      applicableTo: ['troubleshooting', 'diagnostics', 'appliance repair', 'service', 'maintenance', 'problems', 'issues'],
+      relevantUnits: [9, 13, 15, 16, 17, 18, 19, 20, 21],
+      useCase: 'Step-by-step troubleshooting guidance for gas appliance service and repair'
+    },
+    {
       name: 'Gas Technician Study Tools',
       description: 'Interactive study materials and practice tests',
       url: `${this.baseUrl}/tools`,
@@ -133,6 +149,28 @@ class ToolReferencesService {
     const pipeTool = this.tools.find(tool => tool.name === 'Pipe Sizing Calculator');
     if (pipeTool) {
       return `\n\n🔧 **Recommended Tool:**\n**[${pipeTool.name}](${pipeTool.url})**\n${pipeTool.description}\n*${pipeTool.useCase}*`;
+    }
+    return '';
+  }
+
+  /**
+   * Get Code Compass reference
+   */
+  getCodeCompassReference(): string {
+    const codeTool = this.tools.find(tool => tool.name === 'Code Compass');
+    if (codeTool) {
+      return `\n\n📋 **Code Navigation:**\n**[${codeTool.name}](${codeTool.url})**\n${codeTool.description}\n*${codeTool.useCase}*`;
+    }
+    return '';
+  }
+
+  /**
+   * Get HVAC Jack 4.0 reference
+   */
+  getHVACJackReference(): string {
+    const hvacTool = this.tools.find(tool => tool.name === 'HVAC Jack 4.0 Troubleshooting Assistant');
+    if (hvacTool) {
+      return `\n\n🔧 **Troubleshooting Assistant:**\n**[${hvacTool.name}](${hvacTool.url})**\n${hvacTool.description}\n*${hvacTool.useCase}*`;
     }
     return '';
   }

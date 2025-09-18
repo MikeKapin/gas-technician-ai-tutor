@@ -86,6 +86,8 @@ class CSAPDFReader {
 - **Appendix A**: Pipe sizing tables for natural gas
 - **Table 6.1**: Maximum pressure drop allowances
 
+**💡 Pro Tip:** Use **[Code Compass](https://www.larklabs.org/tools)** for quick CSA code lookups and cross-references
+
 ### Common G3 Applications:
 - Residential furnaces, water heaters, ranges
 - Maximum individual appliance: 400,000 BTU/hr
@@ -190,6 +192,8 @@ This tool helps you:
 - Electrical shock
 - Burns from hot surfaces
 - Improper ventilation
+
+**🔧 Troubleshooting Support:** For appliance diagnostics and service issues, use **[HVAC Jack 4.0 Troubleshooting Assistant](https://www.larklabs.org/tools)** for step-by-step guidance
       `.trim(),
       topics: [
         'Personal Protective Equipment',

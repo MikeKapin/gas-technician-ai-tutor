@@ -2,6 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import { TutorLevel } from '@/types';
 
+// Also support CertificationLevel from free version for compatibility
+type CertificationLevel = 'G3' | 'G2';
+type Level = TutorLevel | CertificationLevel;
+
 interface CSAUnit {
   unitNumber: number;
   title: string;
@@ -65,17 +69,31 @@ class CSAContentService {
     const availableUnits = this.getUnitsForLevel(level);
     const queryLower = query.toLowerCase();
 
-    // Topic-based unit mapping
+    // Topic-based unit mapping (enhanced)
     const topicMappings: { [key: string]: number[] } = {
       'safety': [1],
+      'ppe': [1],
+      'personal protective equipment': [1],
       'piping': [8, 10],
       'pipe sizing': [8, 10],
+      'pipe size': [8, 10],
+      'sizing': [8, 10],
       'tools': [2],
       'testing': [2],
+      'pressure test': [2, 8],
+      'leak test': [2, 3],
+      'leak detection': [2, 3],
       'gas properties': [3],
       'natural gas': [3],
+      'flame temperature': [3],
+      'ignition temperature': [3],
+      'specific gravity': [3],
+      'density': [3],
+      'heating value': [3],
+      'btu': [3, 6],
       'codes': [4],
       'regulations': [4],
+      'csa b149': [4],
       'electricity': [5, 12],
       'electrical': [5, 12],
       'manuals': [6],
@@ -85,20 +103,36 @@ class CSAContentService {
       'furnace': [19],
       'heating': [19, 20, 21],
       'water heater': [18],
+      'tankless': [18],
       'venting': [22],
+      'vent': [22],
+      'category i': [22],
+      'category iv': [22],
       'controls': [13],
       'regulators': [11],
+      'regulator': [11],
+      'pressure regulation': [11],
       'clearance': [1, 21, 22],
+      'clearances': [1, 21, 22],
       'installation': [8, 9, 10, 15],
       'commercial': [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-      'pressure': [11, 8, 10],
+      'pressure': [11, 8, 10, 2],
       'building': [14],
       'construction': [14],
       'platform construction': [14],
       'balloon construction': [14],
       'solid construction': [14],
       'frame construction': [14],
-      'cavity wall': [14]
+      'cavity wall': [14],
+      'fireplace': [21],
+      'space heater': [21],
+      'hydronic': [20],
+      'boiler': [20],
+      'forced air': [19],
+      'air handling': [24],
+      'refrigerator': [16],
+      'conversion burner': [17],
+      'add-on': [23]
     };
 
     const relevantUnitNumbers = new Set<number>();
@@ -129,6 +163,40 @@ class CSAContentService {
         availableUnits.slice(0, 3) : // Units 1-3 for G3
         availableUnits.slice(0, 5);   // Units 1-5 for G2
     }
+  }
+
+  /**
+   * Generate specific technical answers for common queries (Pro version gets these immediately)
+   */
+  getSpecificTechnicalAnswer(query: string, level: Level): string | null {
+    const queryLower = query.toLowerCase();
+
+    // Natural Gas Properties
+    if (queryLower.includes('flame temperature') || queryLower.includes('combustion temperature')) {
+      return `**Natural Gas Flame Temperature (Unit 3)**\n\n• **Adiabatic Flame Temperature:** ~1,950°C (3,542°F)\n• **Typical Operating:** 1,000-1,200°C (1,832-2,192°F)\n• Air-to-fuel ratio affects flame characteristics\n• Primary and secondary air complete combustion\n• CSA B149.1 Clause 4.2.1 - Combustion air requirements`;
+    }
+
+    if (queryLower.includes('ignition temperature') || queryLower.includes('auto ignition') || queryLower.includes('autoignition')) {
+      return `**Natural Gas Ignition Temperature (Unit 3)**\n\n• **Auto-Ignition Temperature:** 540°C (1,004°F)\n• **Spark Ignition:** 15,000-20,000 volts\n• **Hot Surface Ignition:** 1,100°C minimum\n• **Flammability Limits:** 5.0% - 15.0% in air\n• CSA B149.1 Clause 4.5 - Ignition systems`;
+    }
+
+    if (queryLower.includes('ppe') && (queryLower.includes('requirement') || queryLower.includes('what'))) {
+      return `**PPE Requirements (Unit 1)**\n\n• **Hard Hat:** CSA Type 1 Class E (electrical hazard protection)\n• **Safety Glasses:** ANSI Z87.1 with side shields\n• **Gloves:** Cut-resistant (ANSI A2 minimum) for metal handling\n• **Boots:** CSA Grade 1 steel-toe with puncture resistance\n• **Gas Detector:** Calibrated combustible gas detector (10% LEL alarm)\n• **High-Vis:** Class 2/3 vest in traffic areas`;
+    }
+
+    if (queryLower.includes('specific gravity') || queryLower.includes('density')) {
+      return `**Natural Gas Specific Gravity (Unit 3)**\n\n• **Standard Specific Gravity:** 0.60 (relative to air)\n• **Density at STP:** 0.717 kg/m³\n• **Heating Value:** ~37.2 MJ/m³ (1,000 BTU/ft³)\n• **Lighter than air** - rises when released\n• Affects gas detector placement (ceiling level)\n• Different from propane (specific gravity 1.52)`;
+    }
+
+    if (queryLower.includes('pressure') && (queryLower.includes('test') || queryLower.includes('testing'))) {
+      return `**Pressure Testing (Units 2 & 8)**\n\n• **Low Pressure (≤7 kPa):** Test at 10 kPa for 10 minutes, 0 Pa drop allowed\n• **Medium Pressure (7-103 kPa):** Test at 1.5× operating pressure for 30 min\n• **High Pressure (>103 kPa):** Test at 1.5× operating pressure for 1 hour\n• **Equipment:** Calibrated manometer accurate to ±25 Pa\n• **Documentation:** Required per CSA B149.1 Clause 7.7`;
+    }
+
+    if (queryLower.includes('clearance') || queryLower.includes('clearances')) {
+      return `**Appliance Clearances (Units 1, 9, 21, 22)**\n\n• **Water Heater:** 150mm (6") top/sides, 600mm (24") front for service\n• **Furnace:** 300mm (12") top, 25mm (1") sides, 600mm (24") front\n• **Fireplace:** 200mm (8") from glass to combustibles\n• **Vent Connector:** 150mm (6") minimum to combustibles\n• CSA B149.1 Clause 6.3 - Clearance requirements`;
+    }
+
+    return null; // No specific answer found
   }
 
   /**
@@ -168,17 +236,32 @@ Key Topics:
   }
 
   /**
-   * Generate CSA-based context for AI prompts
+   * Generate CSA-based context for AI prompts (Enhanced with specific technical data)
    */
   async generateCSAContext(query: string, level: TutorLevel): Promise<string> {
-    const relevantUnits = this.findRelevantUnits(query, level);
-
     let context = `**CSA Training Context for ${level} Level:**\n\n`;
 
+    // First, check for specific technical answers
+    const specificAnswer = this.getSpecificTechnicalAnswer(query, level);
+    if (specificAnswer) {
+      context += `**Direct Technical Answer:**\n${specificAnswer}\n\n`;
+    }
+
+    // Then add relevant unit context for AI to expand upon
+    const relevantUnits = this.findRelevantUnits(query, level);
+
+    context += `**Relevant Training Units:**\n`;
     for (const unit of relevantUnits.slice(0, 3)) { // Limit to top 3 units
       const content = await this.extractUnitContent(unit);
       context += content + '\n\n';
     }
+
+    context += `**Instructions for AI Response:**\n`;
+    context += `• Build upon the technical data provided above\n`;
+    context += `• Add practical applications and examples\n`;
+    context += `• Explain the "why" behind the specifications\n`;
+    context += `• Reference specific CSA clauses when applicable\n`;
+    context += `• Provide troubleshooting guidance where relevant\n\n`;
 
     context += `**Important:** All responses must be based on official CSA B149.1-25 and B149.2-25 codes and the above training materials. When in doubt, always defer to official CSA documentation.`;
 

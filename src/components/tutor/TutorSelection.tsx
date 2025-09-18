@@ -3,12 +3,15 @@
 import React from 'react';
 import { Wrench, BookOpen, CheckCircle, AlertTriangle } from 'lucide-react';
 import { CertificationLevel } from '@/types';
+import { useSubscription } from '@/contexts/SubscriptionContext';
+import SubscriptionBanner from '@/components/subscription/SubscriptionBanner';
 
 interface TutorSelectionProps {
   onSelectLevel: (level: CertificationLevel) => void;
 }
 
 const TutorSelection: React.FC<TutorSelectionProps> = ({ onSelectLevel }) => {
+  const { mode } = useSubscription();
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex flex-col font-sans">
       {/* Header */}
@@ -39,6 +42,8 @@ const TutorSelection: React.FC<TutorSelectionProps> = ({ onSelectLevel }) => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col justify-center px-4 py-8">
         <div className="max-w-md mx-auto w-full space-y-6">
+          {/* Subscription Banner */}
+          <SubscriptionBanner />
           <div className="text-center mb-8">
             <h2 className="text-xl font-semibold text-white mb-2 tracking-wide">Select Your Certification Level</h2>
             <p className="text-slate-400 text-sm font-normal">Choose your gas technician certification path</p>

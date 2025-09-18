@@ -4,6 +4,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Wrench, Mic, Send } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { CertificationLevel, Message } from '@/types';
+import { useSubscription } from '@/contexts/SubscriptionContext';
+import SubscriptionBanner from '@/components/subscription/SubscriptionBanner';
 
 interface ChatInterfaceProps {
   selectedLevel: CertificationLevel;
@@ -16,6 +18,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedLevel, onBack }) 
   const [isRecording, setIsRecording] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'disconnected'>('checking');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { mode, hasAIAccess, incrementMessageCount } = useSubscription();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -41,17 +44,27 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedLevel, onBack }) 
     checkConnection();
 
     // Add welcome message when component mounts
+    const getWelcomeMessage = (): string => {
+      const baseMessage = selectedLevel === 'G3'
+        ? "Welcome to your G3 Gas Technician Tutor! I'm here to help you with CSA B149.1-25 codes, basic gas installation procedures, and G3 certification preparation. Ask me about natural gas appliances up to 400,000 BTU/hr, safety protocols, or code requirements from Units 1-9."
+        : "Welcome to your G2 Gas Technician Tutor! I'm here to help you with advanced CSA B149.1-25 and B149.2-25 codes, complex gas systems, and G2 certification preparation. Ask me about all gas appliances, advanced installations, commercial systems, or complex troubleshooting scenarios from Units 10-24.";
+
+      if (mode === 'free') {
+        return baseMessage + "\n\n**Free Version**: You have access to all CSA training content with local data retrieval. You get 10 AI-powered explanations per session to try the AI features. Upgrade to Pro for unlimited AI tutoring and advanced features.";
+      }
+
+      return baseMessage + "\n\n**AI Tutor Pro**: You have unlimited access to all features including AI explanations, personalized tutoring, and advanced study tools.";
+    };
+
     const welcomeMessage: Message = {
       id: `welcome_${Date.now()}`,
       type: 'ai',
       role: 'assistant',
-      content: selectedLevel === 'G3'
-        ? "Welcome to your G3 Gas Technician Tutor! I'm here to help you with CSA B149.1-25 codes, basic gas installation procedures, and G3 certification preparation. Ask me about natural gas appliances up to 400,000 BTU/hr, safety protocols, or code requirements from Units 1-9."
-        : "Welcome to your G2 Gas Technician Tutor! I'm here to help you with advanced CSA B149.1-25 and B149.2-25 codes, complex gas systems, and G2 certification preparation. Ask me about all gas appliances, advanced installations, commercial systems, or complex troubleshooting scenarios from Units 10-24.",
+      content: getWelcomeMessage(),
       timestamp: new Date()
     };
     setMessages([welcomeMessage]);
-  }, [selectedLevel]);
+  }, [selectedLevel, mode]);
 
   const sendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -68,8 +81,22 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedLevel, onBack }) 
     setMessages(prev => [...prev, newMessage]);
     setInputMessage('');
 
+    // Check if user has AI access
+    if (!hasAIAccess) {
+      const limitMessage: Message = {
+        id: `limit_${Date.now()}`,
+        type: 'ai',
+        role: 'assistant',
+        content: `**Free Version Limit Reached**\n\nYou've used your 10 free AI explanations for this session. All CSA training content remains available for reference.\n\n**Upgrade to AI Tutor Pro** for:\n• Unlimited AI interactions\n• Personalized tutoring\n• Advanced study features\n• Priority support\n\n[**Upgrade to Pro - $9.99/month**](https://buy.stripe.com/5kQeVefxX2VmbCS0tO7ok05)\n\n*Your question: "${userMessage}" - This would normally receive a detailed AI explanation with code references and practical examples.*`,
+        timestamp: new Date(),
+      };
+
+      setMessages(prev => [...prev, limitMessage]);
+      return;
+    }
+
     try {
-      // Get AI response
+      // Get AI response (only if user has access)
       const aiContent = await getAIResponse(userMessage, selectedLevel);
 
       const aiResponse: Message = {
@@ -81,6 +108,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedLevel, onBack }) 
       };
 
       setMessages(prev => [...prev, aiResponse]);
+
+      // Increment message count for free users
+      incrementMessageCount();
+
     } catch (error) {
       console.error('Failed to get AI response:', error);
 
@@ -206,6 +237,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ selectedLevel, onBack }) 
             <span className="text-slate-400 text-xs font-medium uppercase tracking-wider">CSA</span>
           </div>
         </div>
+      </div>
+
+      {/* Subscription Banner */}
+      <div className="px-4 pt-4">
+        <SubscriptionBanner />
       </div>
 
       {/* Messages */}

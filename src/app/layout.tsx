@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import { SubscriptionProvider } from '@/contexts/SubscriptionContext'
 
 export const metadata: Metadata = {
   title: 'Canadian Gas Technician Tutor | G3 G2 Certification',
@@ -49,9 +50,11 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
       <body className="font-sans antialiased">
-        <main className="min-h-screen">
-          {children}
-        </main>
+        <SubscriptionProvider>
+          <main className="min-h-screen">
+            {children}
+          </main>
+        </SubscriptionProvider>
       </body>
     </html>
   )

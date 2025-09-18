@@ -1,4 +1,5 @@
 import { TutorLevel, ChatMessage, TutorConfiguration, CodeReference, ModuleReference, AIResponse, AIServiceConfig, TUTOR_CONFIGURATIONS } from '@/types'
+import { csaPDFReader } from '@/services/csa/pdfReader'
 
 class AIService {
   private config: AIServiceConfig
@@ -63,7 +64,7 @@ class AIService {
     configuration: TutorConfiguration,
     conversationHistory: ChatMessage[]
   ): Promise<AIResponse> {
-    const systemPrompt = this.buildSystemPrompt(tutorLevel, configuration)
+    const systemPrompt = await this.buildSystemPrompt(tutorLevel, configuration, message)
     const chatHistory = this.formatChatHistory(conversationHistory)
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -104,7 +105,7 @@ class AIService {
     conversationHistory: ChatMessage[]
   ): Promise<AIResponse> {
     console.log('🔮 Anthropic: Building request')
-    const systemPrompt = this.buildSystemPrompt(tutorLevel, configuration)
+    const systemPrompt = await this.buildSystemPrompt(tutorLevel, configuration, message)
     const chatHistory = this.formatChatHistoryForAnthropic(conversationHistory)
 
     const requestBody = {
@@ -158,7 +159,19 @@ class AIService {
     return this.parseAIResponse(content, tutorLevel)
   }
 
-  private buildSystemPrompt(tutorLevel: TutorLevel, configuration: TutorConfiguration): string {
+  private async buildSystemPrompt(tutorLevel: TutorLevel, configuration: TutorConfiguration, userQuery: string): Promise<string> {
+    // Get relevant CSA content for this query
+    const relevantCSAContent = csaPDFReader.searchCSAContent(userQuery, tutorLevel);
+
+    let csaContentSection = '';
+    if (relevantCSAContent.length > 0) {
+      csaContentSection = '\n\n**RELEVANT CSA TRAINING CONTENT:**\n\n';
+      relevantCSAContent.forEach(content => {
+        csaContentSection += `**${content.title} (Unit ${content.unitNumber}):**\n${content.content}\n\n`;
+      });
+      csaContentSection += '**END CSA CONTENT**\n\n';
+    }
+
     return `You are a specialized ${tutorLevel} Gas Technician AI Tutor for Canadian gas installations. You are an expert in:
 
 ${configuration.coverage.codes.map(code => `• ${code}`).join('\n')}
@@ -217,7 +230,23 @@ FORMATTING:
 • Provide step-by-step explanations when appropriate
 • Use examples specific to ${tutorLevel === 'G3' ? 'residential/small commercial' : 'large commercial/industrial'} applications
 
-Always tailor your responses to the ${tutorLevel} certification level and avoid topics outside your coverage area.`
+Always tailor your responses to the ${tutorLevel} certification level and avoid topics outside your coverage area.
+
+${csaContentSection}
+
+**CRITICAL INSTRUCTIONS:**
+1. **Base all responses on the CSA content provided above** - this is authentic Canadian gas technician training material
+2. **If CSA content contradicts general AI knowledge, ALWAYS use the CSA content** as it represents official training standards
+3. **Reference specific CSA sections and code numbers** when applicable
+4. **For pipe sizing questions**: Remember that CSA sizing tables include fitting allowances - do NOT add equivalent lengths
+5. **Always emphasize safety first** and proper CSA B149.1-25 compliance
+6. **When uncertain about technical details**, recommend consulting the official CSA B149.1-25 and B149.2-25 codes
+
+**Response Structure:**
+- Start with direct answer based on CSA content
+- Provide CSA code references where applicable
+- Include relevant safety considerations
+- Use "Code Compass" explanation style for complex concepts`
   }
 
   private formatChatHistory(conversationHistory: ChatMessage[]): { role: string, content: string }[] {

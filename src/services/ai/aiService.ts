@@ -26,21 +26,33 @@ class AIService {
     tutorLevel: TutorLevel,
     conversationHistory: ChatMessage[] = []
   ): Promise<AIResponse> {
+    console.log('🤖 AI Service: generateResponse called')
+    console.log('Config check:', {
+      hasApiKey: !!this.config.apiKey,
+      provider: this.config.provider,
+      keyPrefix: this.config.apiKey ? this.config.apiKey.substring(0, 10) + '...' : 'NONE'
+    })
+
     if (!this.config.apiKey) {
-      // Return enhanced fallback response
+      console.log('❌ No API key - returning fallback')
       return this.generateFallbackResponse(message, tutorLevel)
     }
 
     const configuration = TUTOR_CONFIGURATIONS[tutorLevel]
 
     try {
+      console.log('🔄 Attempting API call to:', this.config.provider)
       if (this.config.provider === 'openai') {
-        return await this.callOpenAI(message, tutorLevel, configuration, conversationHistory)
+        const result = await this.callOpenAI(message, tutorLevel, configuration, conversationHistory)
+        console.log('✅ OpenAI call successful')
+        return result
       } else {
-        return await this.callAnthropic(message, tutorLevel, configuration, conversationHistory)
+        const result = await this.callAnthropic(message, tutorLevel, configuration, conversationHistory)
+        console.log('✅ Anthropic call successful')
+        return result
       }
     } catch (error) {
-      console.error('AI Service Error:', error)
+      console.error('💥 AI Service Error - falling back:', error)
       return this.generateFallbackResponse(message, tutorLevel)
     }
   }
@@ -91,8 +103,29 @@ class AIService {
     configuration: TutorConfiguration,
     conversationHistory: ChatMessage[]
   ): Promise<AIResponse> {
+    console.log('🔮 Anthropic: Building request')
     const systemPrompt = this.buildSystemPrompt(tutorLevel, configuration)
     const chatHistory = this.formatChatHistoryForAnthropic(conversationHistory)
+
+    const requestBody = {
+      model: this.config.model,
+      max_tokens: 2000,
+      system: systemPrompt,
+      messages: [
+        ...chatHistory,
+        {
+          role: 'user',
+          content: message
+        }
+      ],
+      temperature: 0.7
+    }
+
+    console.log('📤 Anthropic: Sending request', {
+      model: this.config.model,
+      messageCount: requestBody.messages.length,
+      systemPromptLength: systemPrompt.length
+    })
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -101,28 +134,26 @@ class AIService {
         'x-api-key': this.config.apiKey,
         'anthropic-version': '2023-06-01'
       },
-      body: JSON.stringify({
-        model: this.config.model,
-        max_tokens: 2000,
-        system: systemPrompt,
-        messages: [
-          ...chatHistory,
-          {
-            role: 'user',
-            content: message
-          }
-        ],
-        temperature: 0.7
-      })
+      body: JSON.stringify(requestBody)
     })
+
+    console.log('📥 Anthropic: Response status', response.status, response.statusText)
 
     if (!response.ok) {
       const error = await response.json()
+      console.error('❌ Anthropic API Error:', error)
       throw new Error(`Anthropic API error: ${error.error?.message || 'Unknown error'}`)
     }
 
     const data = await response.json()
+    console.log('📋 Anthropic: Response data structure', {
+      hasContent: !!data.content,
+      contentLength: data.content?.length,
+      firstContentType: data.content?.[0]?.type
+    })
+
     const content = data.content[0]?.text || 'Sorry, I couldn\'t generate a response.'
+    console.log('✅ Anthropic: Extracted content length', content.length)
 
     return this.parseAIResponse(content, tutorLevel)
   }

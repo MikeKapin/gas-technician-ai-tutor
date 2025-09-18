@@ -19,8 +19,8 @@ export async function GET() {
       debug: {
         isRealAI: response.confidence === 0.95, // AI responses have 0.95, fallbacks have 0.85
         contentLength: response.content.length,
-        hasCodeRefs: response.codeReferences?.length > 0,
-        hasModuleRefs: response.moduleReferences?.length > 0
+        hasCodeRefs: (response.codeReferences?.length || 0) > 0,
+        hasModuleRefs: (response.moduleReferences?.length || 0) > 0
       }
     });
   } catch (error) {

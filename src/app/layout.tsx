@@ -3,8 +3,8 @@ import './globals.css'
 import { SubscriptionProvider } from '@/contexts/SubscriptionContext'
 
 export const metadata: Metadata = {
-  title: 'Gas-Tech Tudor - Canadian Gas Technician AI Tutor Pro | G3 G2 Certification',
-  description: 'Gas-Tech Tudor: Professional AI-powered tutor for Canadian Gas Technician certification. CSA B149.1-25 & B149.2-25 compliant training for G3 and G2 gas technicians.',
+  title: 'Gas-Tech Tutor - Canadian Gas Technician AI Tutor Pro | G3 G2 Certification',
+  description: 'Gas-Tech Tutor: Professional AI-powered tutor for Canadian Gas Technician certification. CSA B149.1-25 & B149.2-25 compliant training for G3 and G2 gas technicians.',
   keywords: [
     'Canadian Gas Technician',
     'G3 Certification',
@@ -34,19 +34,19 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Gas-Tech Tudor',
+    title: 'Gas-Tech Tutor',
   },
   openGraph: {
-    title: 'Gas-Tech Tudor - Canadian Gas Technician AI Tutor Pro | G3 G2 Certification',
-    description: 'Gas-Tech Tudor: Professional AI-powered tutor for Canadian Gas Technician certification. CSA B149.1-25 & B149.2-25 compliant training.',
+    title: 'Gas-Tech Tutor - Canadian Gas Technician AI Tutor Pro | G3 G2 Certification',
+    description: 'Gas-Tech Tutor: Professional AI-powered tutor for Canadian Gas Technician certification. CSA B149.1-25 & B149.2-25 compliant training.',
     type: 'website',
     locale: 'en_CA',
     images: ['/icon-512x512.png'],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Gas-Tech Tudor - Canadian Gas Technician AI Tutor Pro | G3 G2 Certification',
-    description: 'Gas-Tech Tudor: Professional AI-powered tutor for Canadian Gas Technician certification. CSA B149.1-25 & B149.2-25 compliant training.',
+    title: 'Gas-Tech Tutor - Canadian Gas Technician AI Tutor Pro | G3 G2 Certification',
+    description: 'Gas-Tech Tutor: Professional AI-powered tutor for Canadian Gas Technician certification. CSA B149.1-25 & B149.2-25 compliant training.',
     images: ['/icon-512x512.png'],
   }
 }

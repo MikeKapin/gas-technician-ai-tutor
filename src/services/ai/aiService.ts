@@ -15,7 +15,7 @@ class AIService {
         : process.env.ANTHROPIC_API_KEY || '',
       model: provider === 'openai'
         ? process.env.NEXT_PUBLIC_OPENAI_MODEL || 'gpt-4-turbo-preview'
-        : process.env.NEXT_PUBLIC_CLAUDE_MODEL || 'claude-3-sonnet-20240229'
+        : process.env.NEXT_PUBLIC_CLAUDE_MODEL || 'claude-sonnet-4-20250514'
     }
 
     if (!this.config.apiKey) {

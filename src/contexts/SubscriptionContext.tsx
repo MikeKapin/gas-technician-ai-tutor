@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-export type SubscriptionMode = 'free' | 'pro';
+export type SubscriptionMode = 'free' | 'pro' | 'student';
 
 interface SubscriptionContextType {
   mode: SubscriptionMode;
@@ -14,6 +14,8 @@ interface SubscriptionContextType {
   isExpiringSoon: boolean;
   incrementMessageCount: () => void;
   resetMessageCount: () => void;
+  activateStudentCode: (code: string) => boolean;
+  isStudentMode: boolean;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
@@ -30,6 +32,7 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
   // Free tier limits
   const messageLimit = 10; // Free users get 10 AI messages per session
   const proAccessDays = 30; // Pro access lasts 30 days
+  const studentAccessDays = 365; // Student access lasts 12 months (365 days)
 
   // Helper function to calculate days remaining
   const calculateDaysRemaining = (purchaseDate: string): number => {
@@ -40,12 +43,51 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     return Math.max(0, diffDays);
   };
 
-  // Check URL parameters and Pro access status on mount
+  // Validate LARK student access codes (LARK0001 - LARK0080)
+  const validateLARKCode = (code: string): boolean => {
+    const upperCode = code.toUpperCase().trim();
+    const larkPattern = /^LARK\d{4}$/;
+
+    if (!larkPattern.test(upperCode)) {
+      return false;
+    }
+
+    const codeNumber = parseInt(upperCode.substring(4));
+    return codeNumber >= 1 && codeNumber <= 80;
+  };
+
+  // Activate student code
+  const activateStudentCode = (code: string): boolean => {
+    if (!validateLARKCode(code)) {
+      return false;
+    }
+
+    const now = new Date().toISOString();
+    const upperCode = code.toUpperCase().trim();
+
+    // Store student activation data
+    localStorage.setItem('student-activation-date', now);
+    localStorage.setItem('student-activation-code', upperCode);
+
+    setMode('student');
+    setDaysRemaining(studentAccessDays);
+
+    return true;
+  };
+
+  // Check URL parameters and access status on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const modeParam = params.get('mode');
     const successParam = params.get('success');
     const newSubscriber = params.get('new');
+    const activate = params.get('activate');
+
+    // Show activation modal if activate=true
+    if (activate === 'true') {
+      // This will be handled by the ChatInterface component
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
 
     // Handle new Pro purchase
     if (modeParam === 'pro' && (successParam === 'true' || newSubscriber === 'true')) {
@@ -60,6 +102,22 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
       // Clean up URL parameters
       window.history.replaceState({}, document.title, window.location.pathname);
     } else {
+      // Check existing Student access first
+      const studentActivationDate = localStorage.getItem('student-activation-date');
+      if (studentActivationDate) {
+        const remaining = calculateDaysRemaining(studentActivationDate);
+        setDaysRemaining(remaining);
+
+        if (remaining > 0) {
+          setMode('student');
+          return;
+        } else {
+          // Student access expired - clean up
+          localStorage.removeItem('student-activation-date');
+          localStorage.removeItem('student-activation-code');
+        }
+      }
+
       // Check existing Pro access
       const purchaseDate = localStorage.getItem('pro-purchase-date');
       if (purchaseDate) {
@@ -79,8 +137,9 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     }
   }, []);
 
-  const hasAIAccess = mode === 'pro' || messagesUsed < messageLimit;
-  const isExpiringSoon = mode === 'pro' && daysRemaining > 0 && daysRemaining <= 5;
+  const hasAIAccess = mode === 'pro' || mode === 'student' || messagesUsed < messageLimit;
+  const isExpiringSoon = (mode === 'pro' || mode === 'student') && daysRemaining > 0 && daysRemaining <= 5;
+  const isStudentMode = mode === 'student';
 
   const incrementMessageCount = () => {
     if (mode === 'free') {
@@ -101,7 +160,9 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     daysRemaining,
     isExpiringSoon,
     incrementMessageCount,
-    resetMessageCount
+    resetMessageCount,
+    activateStudentCode,
+    isStudentMode
   };
 
   return (

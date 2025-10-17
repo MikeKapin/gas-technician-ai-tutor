@@ -146,7 +146,7 @@ const SubscriptionBanner: React.FC = () => {
               className="bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2"
             >
               <GraduationCap className="h-4 w-4" />
-              <span>Unlock AI Tutor</span>
+              <span>Student Access</span>
             </button>
             <button
               onClick={() => window.open(stripePaymentUrl, '_blank')}

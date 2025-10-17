@@ -22,7 +22,7 @@ const ActivationModal: React.FC<ActivationModalProps> = ({ isOpen, onClose }) =>
     setSuccess(false);
 
     if (code.length !== 8) {
-      setError('Access code must be 8 characters (e.g., LARK0001)');
+      setError('Access code must be 8 characters');
       return;
     }
 
@@ -76,7 +76,7 @@ const ActivationModal: React.FC<ActivationModalProps> = ({ isOpen, onClose }) =>
               <div className="text-blue-400 mt-0.5">ℹ️</div>
               <div className="text-sm text-blue-200">
                 <strong>LARK Labs Students:</strong> Enter your 8-character access code
-                (e.g., LARK0001) to unlock 12 months of full AI tutor features.
+                provided by your instructor to unlock 12 months of full AI tutor features.
               </div>
             </div>
           </div>
@@ -92,7 +92,7 @@ const ActivationModal: React.FC<ActivationModalProps> = ({ isOpen, onClose }) =>
               value={code}
               onChange={(e) => setCode(e.target.value.toUpperCase())}
               onKeyPress={handleKeyPress}
-              placeholder="LARK####"
+              placeholder="Enter Code"
               maxLength={8}
               className="w-full bg-slate-700/50 border border-slate-600 rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent font-mono text-lg tracking-wider text-center"
               disabled={success}

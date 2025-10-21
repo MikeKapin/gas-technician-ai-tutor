@@ -94,7 +94,7 @@ export default async function handler(req, res) {
       </h3>
 
       <ol style="color: #374151; font-size: 15px; line-height: 1.8; margin-bottom: 25px;">
-        <li>Return to <a href="https://gas-technician-tutor.vercel.app" style="color: #3b82f6; text-decoration: none;">gas-technician-tutor.vercel.app</a></li>
+        <li>Return to <a href="https://gas-technician-ai-tutor-new.vercel.app" style="color: #3b82f6; text-decoration: none;">gas-technician-ai-tutor-new.vercel.app</a></li>
         <li>You'll see your Pro status displayed at the top of the app</li>
         <li>Start exploring modules or ask the AI tutor any question!</li>
       </ol>

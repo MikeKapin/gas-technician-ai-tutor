@@ -1,10 +1,12 @@
 'use client';
 
-import React from 'react';
-import { Wrench, BookOpen, CheckCircle, AlertTriangle } from 'lucide-react';
+import React, { useState } from 'react';
+import { Wrench, BookOpen, CheckCircle, AlertTriangle, CreditCard } from 'lucide-react';
 import { CertificationLevel } from '@/types';
 import { useSubscription } from '@/contexts/SubscriptionContext';
 import SubscriptionBanner from '@/components/subscription/SubscriptionBanner';
+import PricingModal from '@/components/subscription/PricingModal';
+import ActivationModal from '@/components/subscription/ActivationModal';
 
 interface TutorSelectionProps {
   onSelectLevel: (level: CertificationLevel) => void;
@@ -12,6 +14,9 @@ interface TutorSelectionProps {
 
 const TutorSelection: React.FC<TutorSelectionProps> = ({ onSelectLevel }) => {
   const { mode } = useSubscription();
+  const [showPricingModal, setShowPricingModal] = useState(false);
+  const [showActivationModal, setShowActivationModal] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex flex-col font-sans">
       {/* Header */}
@@ -44,6 +49,19 @@ const TutorSelection: React.FC<TutorSelectionProps> = ({ onSelectLevel }) => {
         <div className="max-w-md mx-auto w-full space-y-6">
           {/* Subscription Banner */}
           <SubscriptionBanner />
+
+          {/* View Pricing Button */}
+          <button
+            onClick={() => setShowPricingModal(true)}
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105 hover:shadow-xl border border-blue-500/30 mb-6"
+            aria-label="View pricing plans"
+          >
+            <div className="flex items-center justify-center space-x-3">
+              <CreditCard className="h-5 w-5" />
+              <span>View All Pricing Plans</span>
+            </div>
+          </button>
+
           <div className="text-center mb-8">
             <h2 className="text-xl font-semibold text-white mb-2 tracking-wide">Select Your Certification Level</h2>
             <p className="text-slate-400 text-sm font-normal">Choose your gas technician certification path</p>
@@ -119,6 +137,19 @@ const TutorSelection: React.FC<TutorSelectionProps> = ({ onSelectLevel }) => {
           </div>
         </div>
       </div>
+
+      {/* Pricing Modal */}
+      <PricingModal
+        isOpen={showPricingModal}
+        onClose={() => setShowPricingModal(false)}
+        onActivateStudent={() => setShowActivationModal(true)}
+      />
+
+      {/* Student Activation Modal */}
+      <ActivationModal
+        isOpen={showActivationModal}
+        onClose={() => setShowActivationModal(false)}
+      />
     </div>
   );
 };

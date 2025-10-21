@@ -90,7 +90,18 @@ export function SubscriptionProvider({ children }: SubscriptionProviderProps) {
     }
 
     // Handle new Pro purchase
-    if (modeParam === 'pro' && (successParam === 'true' || newSubscriber === 'true')) {
+    const paymentParam = params.get('payment');
+    const stripePaymentParam = params.get('stripe_payment');
+
+    // Check if this is a successful Pro purchase from Stripe
+    const isProPurchase = modeParam === 'pro' && (
+      successParam === 'true' ||
+      newSubscriber === 'true' ||
+      paymentParam === 'success' ||
+      stripePaymentParam === 'success'
+    );
+
+    if (isProPurchase) {
       const now = new Date().toISOString();
       localStorage.setItem('pro-purchase-date', now);
       setMode('pro');

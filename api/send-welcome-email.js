@@ -147,7 +147,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'LARK Labs <noreply@larklabs.org>',
+        from: 'LARK Labs <lark_labs@outlook.com>',
         to: email,
         subject: 'Welcome to Gas Tech AI Tutor Pro - You\'re All Set! 🎉',
         html: emailHtml

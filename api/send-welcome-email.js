@@ -82,9 +82,7 @@ export default async function handler(req, res) {
 
       <ul style="color: #374151; font-size: 15px; line-height: 1.8; margin-bottom: 25px;">
         <li><strong>Unlimited AI Tutoring</strong> - Ask as many questions as you need for 30 days</li>
-        <li><strong>Complete CSA G2 Study Material</strong> - All modules, quizzes, and practice exams</li>
         <li><strong>24/7 Access</strong> - Study anytime, anywhere at your own pace</li>
-        <li><strong>Photo Analysis</strong> - Upload photos of equipment for AI-powered explanations</li>
         <li><strong>Priority Support</strong> - Get help when you need it</li>
       </ul>
 
@@ -96,7 +94,7 @@ export default async function handler(req, res) {
       <ol style="color: #374151; font-size: 15px; line-height: 1.8; margin-bottom: 25px;">
         <li>Return to <a href="https://gas-technician-ai-tutor-new.vercel.app" style="color: #3b82f6; text-decoration: none;">gas-technician-ai-tutor-new.vercel.app</a></li>
         <li>You'll see your Pro status displayed at the top of the app</li>
-        <li>Start exploring modules or ask the AI tutor any question!</li>
+        <li>Start asking the AI tutor any question about gas technician work!</li>
       </ol>
 
       <!-- Important Note -->

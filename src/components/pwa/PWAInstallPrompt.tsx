@@ -12,8 +12,22 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onDismiss, classNam
   const [showPrompt, setShowPrompt] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [platform, setPlatform] = useState<'ios' | 'android' | 'desktop' | 'other'>('other');
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    // Mark as client-side rendered
+    setIsClient(true);
+
+    // Check if already dismissed
+    if (sessionStorage.getItem('pwa-install-dismissed') === 'true') {
+      return;
+    }
+
+    // Check if already installed
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      return;
+    }
+
     // Detect platform
     const userAgent = navigator.userAgent;
     if (/iPad|iPhone|iPod/.test(userAgent)) {
@@ -60,23 +74,11 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onDismiss, classNam
   const handleDismiss = () => {
     setShowPrompt(false);
     onDismiss?.();
-    // Remember dismissal for this session (client-side only)
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('pwa-install-dismissed', 'true');
-    }
+    sessionStorage.setItem('pwa-install-dismissed', 'true');
   };
 
-  // Don't show if already dismissed this session (client-side only)
-  if (typeof window !== 'undefined' && sessionStorage.getItem('pwa-install-dismissed') === 'true') {
-    return null;
-  }
-
-  // Don't show if already installed (running in standalone mode) (client-side only)
-  if (typeof window !== 'undefined' && window.matchMedia('(display-mode: standalone)').matches) {
-    return null;
-  }
-
-  if (!showPrompt) {
+  // Don't render until client-side hydration is complete
+  if (!isClient || !showPrompt) {
     return null;
   }
 

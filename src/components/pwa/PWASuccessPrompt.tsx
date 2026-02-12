@@ -12,8 +12,17 @@ const PWASuccessPrompt: React.FC<PWASuccessPromptProps> = ({ onDismiss, classNam
   const [showPrompt, setShowPrompt] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [platform, setPlatform] = useState<'ios' | 'android' | 'desktop' | 'other'>('other');
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    // Mark as client-side rendered
+    setIsClient(true);
+
+    // Check if already installed
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      return;
+    }
+
     // Only show if payment success flag is set
     const showFlag = sessionStorage.getItem('show-pwa-success');
     if (showFlag === 'true') {
@@ -67,12 +76,8 @@ const PWASuccessPrompt: React.FC<PWASuccessPromptProps> = ({ onDismiss, classNam
     onDismiss?.();
   };
 
-  // Don't show if already installed
-  if (typeof window !== 'undefined' && window.matchMedia('(display-mode: standalone)').matches) {
-    return null;
-  }
-
-  if (!showPrompt) {
+  // Don't render until client-side hydration is complete
+  if (!isClient || !showPrompt) {
     return null;
   }
 
